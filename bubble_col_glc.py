@@ -17,7 +17,6 @@ def solve(params):
             sol: The solution object from scipy.integrate.solve_bvp.
         """
 
-        # Unpack the dimensionless parameters for easier access
         Bo_l = dimensionless_params["Bo_l"]
         phi_l = dimensionless_params["phi_l"]
         Bo_g = dimensionless_params["Bo_g"]
@@ -50,7 +49,6 @@ def solve(params):
             # Equation for d(S[3])/d(xi) = d^2(y_T2)/d(xi)^2 from eq (11)
             # Avoid division by zero if (1 - psi * xi) is close to zero at xi=1
             denominator = 1 - psi * xi
-            # Use np.where for element-wise conditional logic to prevent division by zero.
             denominator = np.where(np.isclose(denominator, 0), 1e-9, denominator)
 
             term1 = (1 + 2 * psi / Bo_g) * dy_T2_dxi
@@ -82,7 +80,7 @@ def solve(params):
 
             return np.array([res1, res2, res3, res4])
 
-        # Set up the mesh (integration points) and an initial guess for the solver.
+        # Set up the mesh and an initial guess for the solver.
         xi = np.linspace(0, 1, 51)
 
         # A flat initial guess is often good enough to get the solver started.
@@ -95,15 +93,13 @@ def solve(params):
 
         return sol
 
-        # Unpack parameters
-
     # Unpack parameters
     c_T_inlet = params["c_T_inlet"]
     y_T2_in = params["y_T2_in"]
     P_0 = params["P_0"]
     L = params["L"]
     u_l = params["u_l"]
-    u_g = params["u_g"]
+    u_g0 = params["u_g0"]
     ε_g = params["ε_g"]
     ε_l = params["ε_l"]
     E_g = params["E_g"]
@@ -128,9 +124,7 @@ def solve(params):
     Bo_l = u_l * L / ((1 - ε_g) * E_l)  # Bodenstein number, liquid phase
     Φ_l = a * h_l * L / u_l  # Mass transfer parameter, liquid phase
     # Eq 14 in the paper
-    Bo_g = (
-        u_g * L / (ε_g * E_g)
-    )  # Bodenstein number, gas phase (assumed near plug-flow condition)
+    Bo_g = (u_g0 * L / (ε_g * E_g))  # Bodenstein number, gas phase (assumed near plug-flow condition)
     Φ_g = a * h_l * L / u_l  # Mass transfer parameter, gas phase
     # Eq 15 in the paper
     ψ = (ρ_l * g * (1 - ε_g) * L) / P_0  # Hydrostatic pressure ratio
@@ -145,7 +139,7 @@ def solve(params):
         "nu": ν,
     }
 
-    # Solve the model with dimensionless params assuming pure purge gas at the inlet
+    # Solve the model
     solution = solve_tritium_extraction(dimensionless_params, y_T2_in)
 
     # --- Results ---
@@ -153,13 +147,13 @@ def solve(params):
         # --- Dimensionless Results ---
         x_T_outlet_dimless = solution.y[0, 0]
         efficiency = 1 - x_T_outlet_dimless
+        y_T2_outlet_gas = solution.y[2, -1]  # y_T2 at xi=1
 
         # --- Dimensional Results ---
         # Liquid concentration at outlet (xi=0)
         c_T_outlet = x_T_outlet_dimless * c_T_inlet
 
         # Gas partial pressure at outlet (xi=1)
-        y_T2_outlet_gas = solution.y[2, -1]  # y_T2 at xi=1
         P_outlet_gas = P_0 * (1 - dimensionless_params["psi"])
         P_T2_outlet_gas = y_T2_outlet_gas * P_outlet_gas
 
@@ -167,16 +161,17 @@ def solve(params):
         extraction_rate = Q_l * (c_T_inlet - c_T_outlet)  # mol/s
 
         # Gas velocity at outlet (xi=1)
-        u_g_outlet = u_g / (1 - dimensionless_params["psi"])
+        u_g_outlet = u_g0 / (1 - dimensionless_params["psi"])
 
         results = {
-            "extraction_efficiency": efficiency,
-            "c_T_outlet": c_T_outlet,
-            "liquid_vol_flow": Q_l,
-            "P_T2_outlet_gas": P_T2_outlet_gas,
-            "gas_P_outlet": P_outlet_gas,
-            "gas_vol_flow_outlet": u_g_outlet * A_g,
-            "extraction_rate": extraction_rate,
+            "extraction_efficiency [%]": efficiency * 100,
+            "extraction_rate [mol/s]": extraction_rate,
+            "c_T_outlet [mol/m^3]": c_T_outlet,
+            "liquid_vol_flow [m^3/s]": Q_l,
+            "total_gas_P_outlet [Pa]": P_outlet_gas,
+            "P_T2_outlet_gas [Pa]": P_T2_outlet_gas,
+            "gas_vol_flow_outlet [m^3/s]": u_g_outlet * A_g,
+
         }
 
     else:
