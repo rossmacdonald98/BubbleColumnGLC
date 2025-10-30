@@ -5,7 +5,7 @@ import scipy.constants as const
 
 def solve(params):
 
-    def solve_tritium_extraction(dimensionless_params, y_T2_in):
+    def solve_tritium_extraction(dimensionless_params, y_T2_in, elements):
         """
         Solves the BVP for tritium extraction in a bubble column.
 
@@ -42,7 +42,7 @@ def solve(params):
             dS0_dxi = dx_T_dxi
 
             # Equation for d(S[1])/d(xi) = d^2(x_T)/d(xi)^2
-            dS1_dxi = Bo_l * (phi_l * theta - dx_T_dxi)
+            dS1_dxi = Bo_l * (phi_l * theta - dx_T_dxi)  # Eq. 9.1.4
 
             # Equation for d(S[2])/d(xi) = d(y_T2)/d(xi)
             dS2_dxi = dy_T2_dxi
@@ -52,9 +52,9 @@ def solve(params):
             denominator = 1 - psi * xi
             denominator = np.where(np.isclose(denominator, 0), 1e-9, denominator)
 
-            term1 = (1 + 2 * psi / Bo_g) * dy_T2_dxi  # Part of Eq. 9.3.3 (fourth line)
-            term2 = phi_g * theta  # Part of Eq. 9.3.3 (fourth line)
-            dS3_dxi = (Bo_g / denominator) * (term1 - term2)  # Eq. 9.3.3 (fourth line)
+            term1 = (1 + 2 * psi / Bo_g) * dy_T2_dxi
+            term2 = phi_g * theta
+            dS3_dxi = (Bo_g / denominator) * (term1 - term2)
 
             return np.vstack((dS0_dxi, dS1_dxi, dS2_dxi, dS3_dxi))
 
@@ -71,10 +71,10 @@ def solve(params):
             res1 = Sa[1]  # Eq. 10.1
 
             # At xi = 1: x_T(1) = 1 - (1/Bo_l) * dx_T/d(xi)|_1
-            res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1])  # Eq. 10.2
+            res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1]) # Eq. 10.2
 
             # At xi = 0: y_T2(0) = y_T2(0-) + (1/Bo_g) * dy_T2/d(xi)|_0
-            res3 = Sa[2] - (y_T2_in + (1 / Bo_g) * Sa[3])  # Eq. 10.3
+            res3 = Sa[2] - y_T2_in - (1 / Bo_g) * Sa[3]  # Eq. 10.3
 
             # At xi = 1: dy_T2/d(xi) = 0
             res4 = Sb[3]  # Eq. 10.4
@@ -82,22 +82,26 @@ def solve(params):
             return np.array([res1, res2, res3, res4])
 
         # Set up the mesh and an initial guess for the solver.
-        xi = np.linspace(0, 1, 51)
+        xi = np.linspace(0, 1, elements + 1)
 
-        # A flat initial guess is often good enough to get the solver started.
+        # An initial guess that is physically plausible can significantly help convergence.
+        # We expect liquid concentration (x_T) to decrease from inlet (xi=1) to outlet (xi=0).
+        # We expect gas concentration (y_T2) to increase from inlet (xi=0) to outlet (xi=1).
         y_guess = np.zeros((4, xi.size))
-        y_guess[0, :] = 0.8  # Guess for x_T
-        y_guess[2, :] = 1e-5  # Guess for y_T2
+        y_guess[0, :] = np.linspace(0.5, 1.0, xi.size)  # Guess for x_T (linear decrease)
+        y_guess[1, :] = -0.5 # Guess for dx_T/dxi
+        y_guess[2, :] = np.linspace(y_T2_in, y_T2_in + 1e-4, xi.size)  # Guess for y_T2 (linear increase)
+        y_guess[3, :] = 1e-4 # Guess for dy_T2/dxi
 
         # Run the BVP solver
-        sol = solve_bvp(ode_system, boundary_conditions, xi, y_guess, tol=1e-5)
+        sol = solve_bvp(ode_system, boundary_conditions, xi, y_guess, tol=1e-5, max_nodes=10000)
 
         return sol
 
     # Unpack parameters
     c_T_inlet = params["c_T_inlet"]
     P_T2_in = params["P_T2_in"]
-    P_0 = params["P_0"]
+    P_outlet = params.get("P_outlet", None)
     ρ_l = params["ρ_l"]
     K_s = params["K_s"]
 
@@ -120,6 +124,16 @@ def solve(params):
 
     R = params.get("R", const.R)  # Ideal gas constant, J/(mol.K)
 
+    elements = params["elements"] # Number of mesh elements for solver
+
+    # Calculate inlet pressure hydrostatically
+    P_0 = P_outlet + ρ_l * g * L
+
+    if P_0 <= 0:
+        raise ValueError(
+            f"Calculated inlet pressure P_0 must be positive, but got {P_0:.2e} Pa. Check P_outlet, rho_l, g, and L."
+        )
+    
     # Calculate the superficial flow velocities
     A = np.pi * (D / 2) ** 2  # m^2, Cross-sectional area of the column
     u_g0 = Q_g / A  # m/s, superficial gas inlet velocity
@@ -148,7 +162,7 @@ def solve(params):
     }
 
     # Solve the model
-    solution = solve_tritium_extraction(dimensionless_params, y_T2_in)
+    solution = solve_tritium_extraction(dimensionless_params, y_T2_in, elements)
 
     # --- Results ---
     if solution.success:
