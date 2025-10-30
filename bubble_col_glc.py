@@ -101,7 +101,7 @@ def solve(params):
     # Unpack parameters
     c_T_inlet = params["c_T_inlet"]
     y_T2_in = params["y_T2_in"]
-    P_outlet = params.get("P_outlet", None)
+    P_outlet = params["P_outlet"]
     ρ_l = params["ρ_l"]
     K_s = params["K_s"]
 
