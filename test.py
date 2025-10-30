@@ -7,12 +7,12 @@ import numpy as np
 # --- Parameters ---
 # Input parameters
 c_T_inlet = 3.09e-2  # mol/m^3 (c_T(L+)), Inlet tritium concentration in liquid just before inlet
-P_T2_in = 0.0  # Pa, Inlet tritium partial pressure in gas (0 = pure purge gas)
+y_T2_in = 0.0  # Inlet tritium molar fraction in gas (0 = pure purge gas)
 P_outlet = 5e5  # Pa, Gas total pressure at outlet
 ρ_l = 9000  # kg/m^3, Liquid density
 K_s = 2e-6  # Tritium Sievert's constant in liquid
 
-L = 4.0  # m, Height of the bubble column
+L = 100.0  # m, Height of the bubble column
 D = 0.5  # m, Column diameter
 ε_g = 0.04  # Gas phase fraction
 
@@ -33,7 +33,7 @@ elements = 50  # Number of mesh elements for solver
 
 params = {
     "c_T_inlet": c_T_inlet,
-    "P_T2_in": P_T2_in,
+    "y_T2_in": y_T2_in,
     "P_outlet": P_outlet,
     "elements": elements,
     "ρ_l": ρ_l,

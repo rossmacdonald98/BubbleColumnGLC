@@ -100,7 +100,7 @@ def solve(params):
 
     # Unpack parameters
     c_T_inlet = params["c_T_inlet"]
-    P_T2_in = params["P_T2_in"]
+    y_T2_in = params["y_T2_in"]
     P_outlet = params.get("P_outlet", None)
     ρ_l = params["ρ_l"]
     K_s = params["K_s"]
@@ -150,8 +150,6 @@ def solve(params):
         0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0)
     )  # Transfer units parameter, gas phase (Eq. 8.12)
 
-    y_T2_in = P_T2_in / P_0  # Inlet tritium molar fraction in gas phase
-
     dimensionless_params = {
         "Bo_l": Bo_l,
         "phi_l": phi_l,
@@ -190,6 +188,7 @@ def solve(params):
         n_T_out_liquid = c_T_outlet * Q_l * N_A  # Tritons/s
 
         # Tritium molar flow rate into the column via gas
+        P_T2_in = y_T2_in * P_0 # [Pa]
         n_T2_in_gas = (P_T2_in * Q_g / (R * T)) * N_A  # T2/s
         n_T_in_gas = n_T2_in_gas * 2  # Triton/s
 
