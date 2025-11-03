@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.integrate import solve_bvp
 import scipy.constants as const
+from scipy.optimize import root_scalar
 
 
 def solve(params):
@@ -98,49 +99,108 @@ def solve(params):
 
         return sol
 
-    # Unpack parameters
-    c_T_inlet = params["c_T_inlet"]
-    y_T2_in = params["y_T2_in"]
-    P_outlet = params["P_outlet"]
-    ρ_l = params["ρ_l"]
-    K_s = params["K_s"]
 
-    L = params["L"]
-    D = params["D"]
-    ε_g = params["ε_g"]
 
-    Q_l = params["Q_l"]
-    Q_g = params["Q_g"]
 
-    a = params["a"]
 
-    E_g = params["E_g"]
-    E_l = params["E_l"]
+    # --- Unpack User Input Parameters ---
+    # Bubble Column parameters
+    c_T_inlet = params["c_T_inlet"]  # mol/m^3 (c_T(L+)), Inlet tritium concentration in liquid just before inlet
+    y_T2_in = params["y_T2_in"]  # Inlet tritium molar fraction in gas (0 = pure purge gas)
+    P_0 = params["P_0"]  # Pa, Gas total pressure at (gas) inlet)
 
-    h_l = params["h_l"]
+    L = params["L"]  # m, Height of the bubble column
+    D = params["D"]  # m, Column diameter
 
-    g = params["g"]
-    T = params["T"]
+    Flow_l = params["Flow_l"] # kg/s, Liquid mass flow rate
+    Flow_g = params["Flow_g"] # mol/s, Gas molar flow rate
+    
+    T = params["T"]  # K, Temperature
 
-    R = params.get("R", const.R)  # Ideal gas constant, J/(mol.K)
-
+    # Solver parameters
     elements = params["elements"] # Number of mesh elements for solver
 
-    # Calculate inlet pressure hydrostatically
-    P_0 = P_outlet + ρ_l * g * L
+    # --- Constants ---
+    g = 9.81  # m/s^2, Gravitational acceleration
+    R = const.R  # J/(mol·K), Universal gas constant
+    N_A = const.N_A  # 1/mol, Avogadro's number
+    M_LiPb = 2.875E-25 # Kg/molecule, Lipb molecular mass
 
-    if P_0 <= 0:
-        raise ValueError(
-            f"Calculated inlet pressure P_0 must be positive, but got {P_0:.2e} Pa. Check P_outlet, rho_l, g, and L."
-        )
-    
+    # --- Calculated parameters ---
+
+    # Calculate empirical correlations
+    ρ_l = 10.45e3 * (1 - 1.61e-4 * T)  # kg/m^3, Liquid (LiPb) density
+    σ_l = 0.52 - 0.11e-3 * T  # N/m, Surface tension, liquid (LiPb) - gas (He) interface
+    μ_l = 1.87e-4 * np.exp(11640 / (R*T))  # Pa.s, Dynamic viscosity of liquid LiPb
+    ν_l = μ_l / ρ_l # m^2/s, Kinematic viscosity of liquid LiPb
+    D_T = 2.5E-7 * np.exp(-27000/(R*T))  # m^2/s, Tritium diffusion coefficient in liquid LiPb
+
+    K_s = 2.32E-8 * np.exp(-1350 / (R*T))  # atfrac*Pa^0.5, Sievert's constant for tritium in liquid LiPb
+    K_s = K_s * (ρ_l / (M_LiPb * N_A))  # mol/(m^3·Pa^0.5)
+
+
+    # Calculate the volumetric flow rates
+    Q_l = Flow_l / ρ_l  # m^3/s, Volumetric flow rate of liquid phase
+    Q_g = (Flow_g * R * T) / P_0  # m^3/s, Volumetric flow rate of gas phase at inlet
+
     # Calculate the superficial flow velocities
     A = np.pi * (D / 2) ** 2  # m^2, Cross-sectional area of the column
     u_g0 = Q_g / A  # m/s, superficial gas inlet velocity
     u_l = Q_l / A  # m/s, superficial liquid inlet velocity
 
+    # Calculate Bond, Galilei, Schmidt and Froude numbers
+    Bn = (g * D**2 * ρ_l) / σ_l  # Bond number
+    Ga = (g * D**3) / ν_l**2  # Galilei number
+    Sc = ν_l / D_T # Schmidt number
+    Fr = u_g0 / (g * D)**0.5  # Froude number
+
+    # Calculate dispersion coefficients
+    E_l = (D * u_g0) / ((13 * Fr) / (1 + 6.5*(Fr**0.8)) ) # m^2/s, Effective axial dispersion coefficient, liquid phase
+    E_g = (0.2 * D**2) * u_g0 # m^2/s, Effective axial dispersion coefficient, gas phase
+
+    # Calculate gas hold-up (phase fraction) & mass transfer coefficient
+    C = 0.2 * (Bn**(1/8)) * (Ga**(1/12)) * Fr # C = ε_g / (1 - ε_g)^4
+
+    print(C)
+
+    def solveEqn(ε_g, C):
+        # Define the equation to solve
+        eqn = ε_g / (1 - ε_g)**4 - C
+        return eqn
+    ε_g_initial_guess = 0.1
+    try:
+        # bracket=[0.0001, 0.9999] tells it to *only* look in this range
+        sol = root_scalar(solveEqn, args=(C,), bracket=[0.00001, 0.99999])
+
+    except ValueError as e:
+        print(f"Solver failed. This can happen if C is so large that no solution exists between 0 and 1.")
+        print(f"Error: {e}")
+
+    ε_g = sol.root # Gas phase fraction
+
+    # Calculate outlet pressure hydrostatically & check non-negative
+    P_outlet = P_0 - ( ρ_l * (1 - ε_g) * g * L)
+
+    if P_outlet <= 0:
+        raise ValueError(
+            f"Calculated gas outlet pressure P_outlet must be positive, but got {P_outlet:.2e} Pa. Check P_0, rho_l, g, and L are realistic."
+        )
+
+    # Calculate mean bubble diameter
+    d_b = (26 * (Bn**-0.5) * (Ga**-0.12) * (Fr**-0.12)) * D  # m, Mean bubble diameter AGREES WITH PAPER
+
+    # Calculate interfacial area
+    a = 6 * ε_g / d_b  # m^-1, Specific interfacial area, assuming spherical bubbles
+
+    # Calculate volumetric mass transfer coefficient, liquid-gas
+    h_l_a = D_T * (0.6 * Sc**0.5 * Bn**0.62 * Ga**0.31 * ε_g**1.1) / (D**2)  # Volumetric mass transfer coefficient, liquid-gas
+
+    # Calculate mass transfer coefficient
+    h_l = h_l_a / a # Mass transfer coefficient
+
     # Calculate dimensionless values
     ε_l = 1 - ε_g  # Liquid phase fraction
+
     ψ = (ρ_l * g * ε_l * L) / P_0  # Hydrostatic pressure ratio (Eq. 8.3)
     ν = (c_T_inlet / K_s) ** 2 / P_0  # Tritium partial pressure ratio (Eq. 8.5)
     Bo_l = u_l * L / (ε_l * E_l)  # Bodenstein number, liquid phase (Eq. 8.9)
@@ -201,30 +261,17 @@ def solve(params):
         T_in = n_T_in_liquid + n_T_in_gas
         T_out = n_T_out_liquid + n_T_out_gas
 
-        print(
-            f"Tritum in (liquid phase): {n_T_in_liquid:.4e} Tritons/s"
-            f", Tritium in (gas phase): {n_T_in_gas:.4e} Tritons/s"
-        )
-
-        print(
-            f"Tritium out (liquid phase): {n_T_out_liquid:.4e} Tritons/s"
-            f", Tritium out (gas phase): {n_T_out_gas:.4e} Tritons/s"
-        )
-
-        print(
-            f"Total Tritium in: {T_in:.4e} Tritons/s"
-            f", Total Tritium out: {T_out:.4e} Tritons/s"
-        )
-
         results = {
+            "Total tritium in [T/s]": T_in,
+            "Total tritium out [T/s]": T_out,
             "extraction_efficiency [%]": efficiency * 100,
             "c_T_inlet [mol/m^3]": c_T_inlet,
             "c_T_outlet [mol/m^3]": c_T_outlet,
             "liquid_vol_flow [m^3/s]": Q_l,
             "P_T2_inlet_gas [Pa]": P_T2_in,
             "P_T2_outlet_gas [Pa]": P_T2_out,
-            "total_gas_P_outlet [Pa]": P_outlet,
             "gas_vol_flow [m^3/s]": Q_g,
+            "total_gas_P_outlet [Pa]": P_outlet,
         }
 
     else:
