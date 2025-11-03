@@ -103,7 +103,7 @@ This is equation (4) in the paper.
     $$
 
 
-## 5. Gas Phase Mass Balance
+## 5. Gas Phase Total Mass Balance
 This is equation (5) in the paper.
 
 Enforces that the only change in the total gas mass flow along the length of the column is due to the source term of tritium flux from the liquid to the gas.
@@ -289,7 +289,7 @@ u_g P y_{T_2} = \left(\frac{u_{g0}}{1-\xi\psi}\right) \left(P_0(1-\xi\psi)\right
 $$
 The derivative of the advection term with respect to $z$ is:
 $$
-\frac{d(u_{g}Py_{T_{2}})}{dz} = \frac{1}{L}\frac{d(u_{g0}P_0 y_{T_2})}{d\xi} = \frac{u_{g0}P_0}{L}\frac{dy_{T_2}}{d\xi} \tag{9.2.2}
+\frac{d(u_{g}Py_{T_{2}})}{dz} = \frac{1}{L}\frac{d(u_{g0}P_0 y_{T_2})}{d\xi} = \frac{u_{g0}P_0}{L}\frac{dy_{T_2}}{d\xi} \tag{9.2.2
 $$
 
 This simplification is the primary reason for using the molar fraction $y_{T_{2}}$ as the state variable for the gas phase instead of the partial pressure $P_{T_{2}}$. By choosing $y_{T_{2}}$, the position-dependent terms for gas velocity $u_g(z)$ and total pressure $P(z)$ cancel out in the advection term, leading to a much simpler derivative.
@@ -333,6 +333,10 @@ We arrive at the final dimensionless ODE for the gas phase:
 $$
 \frac{(1-\xi\psi)}{Bo_{g}}\frac{d^{2}y_{T_{2}}}{d\xi^{2}} - \left(1 + \frac{2\psi}{Bo_{g}}\right)\frac{dy_{T_{2}}}{d\xi} + \phi_{g}\theta = 0 \tag{9.2.10}
 $$
+In the paper they write this equation with opposite signs:
+$$
+-\frac{(1-\xi\psi)}{Bo_{g}}\frac{d^{2}y_{T_{2}}}{d\xi^{2}} + \left(1 + \frac{2\psi}{Bo_{g}}\right)\frac{dy_{T_{2}}}{d\xi} - \phi_{g}\theta = 0 \tag{9.2.11}
+$$
 This is equation (11) in the paper.
 ### 9.3. Summary of the System
 
@@ -342,7 +346,7 @@ The two governing equations are the liquid phase balance (9.1.4) and the gas pha
 $$
 \begin{cases}
 \frac{1}{Bo_{l}}\frac{d^{2}x_{T}}{d\xi^{2}} + \frac{dx_{T}}{d\xi} - \phi_{l}\theta = 0 \quad \text{(Liquid Phase)} \\
-\frac{(1-\xi\psi)}{Bo_{g}}\frac{d^{2}y_{T_{2}}}{d\xi^{2}} - \left(1 + \frac{2\psi}{Bo_{g}}\right)\frac{dy_{T_{2}}}{d\xi} + \phi_{g}\theta = 0 \quad \text{(Gas Phase)}
+-\frac{(1-\xi\psi)}{Bo_{g}}\frac{d^{2}y_{T_{2}}}{d\xi^{2}} + \left(1 + \frac{2\psi}{Bo_{g}}\right)\frac{dy_{T_{2}}}{d\xi} - \phi_{g}\theta = 0 \quad \text{(Gas Phase)}
 \end{cases} \tag{9.3.1}
 $$
 Where:
@@ -393,4 +397,101 @@ This system of four first-order ODEs, along with the four boundary conditions fr
     \frac{dy_{T_{2}}}{d\xi}\bigg|_{\xi=1} = 0 \tag{10.4}
     $$
 
----
+
+## 11. Parameter Acquisition
+
+The core model requires several parameters that describe the hydrodynamic and mass transfer behaviour of the bubble column (e.g., $\epsilon_g, a, h_l, E_l, E_g$). These parameters are not fundamental material properties but depend on the column's geometry, operating conditions, and the physical properties of the fluids. They are typically estimated using well-established empirical correlations derived from experimental data.
+
+### 11.1. Bond, Galilei, Schmidt & Froude numbers ($Bn$, $Ga$, $Sc$, & $Fr$)
+
+$$
+Fr = \frac{u_{g0}}{\sqrt{gD}}
+$$
+
+$$
+Bn = \frac{g D^{2} \rho_{l}}{\sigma_{l}}
+$$
+$$
+Ga = \frac{g D^{3}}{\nu_{l}^{2}}
+$$
+$$
+Sc = \frac{\nu_{l}}{D_{T,l}}
+$$
+
+### 11.2. Liquid Phase Dispersion Coefficient ($E_l$)
+
+Correlation for the liquid-phase dispersion coefficient in terms of the column diameter and liquid properties:
+
+$$
+E_{l} = \frac{D \cdot u_{g0}}{((13Fr)/(1+6.5 \cdot (Fr)^{0.8}))} 
+$$
+
+### 11.3. Gas Phase Dispersion Coefficient ($E_g$)
+
+A commonly used correlation for the gas-phase dispersion coefficient:
+
+$$
+E_{g} = 0.2\,D^{2}u_{g0} \tag{19}
+$$
+
+
+### 11.4. Gas Holdup ($\epsilon_g$)
+
+A correlation that has been used to estimate the gas holdup in similar systems:
+
+$$
+\frac{\epsilon_{g}}{(1 - \epsilon_{g})^{4}} = 0.2\,Bn^{1/8}\,Ga^{1/12}\,Fr \tag{21}
+$$
+
+(Iterate to solve for $\epsilon_g$.)
+
+### 11.5. Liquid Phase Fraction ($\epsilon_l$)
+
+The liquid phase fraction is simply related to the gas phase fraction:
+
+$$
+\epsilon_{l} = 1 - \epsilon_{g} \tag{22}
+$$
+
+### 11.6. Mean Bubble Diameter ($d_b$)
+
+A common correlation for the mean bubble diameter in gas-liquid systems. Two empirical options are provided:
+
+- Correlation from the supplied reference (equation 35):
+
+$$
+\frac{d_b}{D} = 26\,Bn^{-0.5}\,Ga^{-0.12}\,Fr^{-0.12} \tag{35}
+$$
+
+- Simpler holdup-based estimate (kept for reference):
+
+$$
+d_{b} = \frac{0.07\,D}{\epsilon_{g}^{0.5}} \tag{24}
+$$
+
+Use the first relation (eq. 35) when dimensionless groups Bn, Ga and Fr are known and a geometry/scaling-based estimate is needed; use the holdup-based estimate for quick approximate sizing.
+
+### 11.7. Specific Interfacial Area ($a$)
+
+A correlation for the specific interfacial area in terms of the column diameter and gas holdup:
+
+$$
+a = \frac{30}{D} \left( \frac{\epsilon_{g}}{1-\epsilon_{g}} \right)^{0.5} \tag{25}
+$$
+
+### 11.8. Volumetric Mass Transfer Coefficient ($a*h_l$)
+
+An empirical correlation for the volumetric mass transfer coefficient used in the literature:
+
+$$
+\frac{a h_{l} D^{2}}{D_{T,l}} = 0.6\,Sc^{0.5}\,Bn^{0.62}\,Ga^{0.31}\,\epsilon_{g}^{1.1} \tag{22}
+$$
+
+From this, $a h_l$ can be obtained when $\epsilon_g$ (from eq. 21) and fluid properties are known.
+
+### 11.9. Mass Transfer Coefficient ($h_l$)
+
+Typical values for the mass transfer coefficient in gas-liquid systems are in the range of $1 \times 10^{-6}$ to $1 \times 10^{-4}$ $m \cdot s^{-1}$. A common starting value is $h_l = 1 \times 10^{-5}$ $m \cdot s^{-1}$. Adjust based on system response and correlations.
+
+
+
