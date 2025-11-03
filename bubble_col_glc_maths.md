@@ -289,7 +289,7 @@ u_g P y_{T_2} = \left(\frac{u_{g0}}{1-\xi\psi}\right) \left(P_0(1-\xi\psi)\right
 $$
 The derivative of the advection term with respect to $z$ is:
 $$
-\frac{d(u_{g}Py_{T_{2}})}{dz} = \frac{1}{L}\frac{d(u_{g0}P_0 y_{T_2})}{d\xi} = \frac{u_{g0}P_0}{L}\frac{dy_{T_2}}{d\xi} \tag{9.2.2
+\frac{d(u_{g}Py_{T_{2}})}{dz} = \frac{1}{L}\frac{d(u_{g0}P_0 y_{T_2})}{d\xi} = \frac{u_{g0}P_0}{L}\frac{dy_{T_2}}{d\xi} \tag{9.2.2}
 $$
 
 This simplification is the primary reason for using the molar fraction $y_{T_{2}}$ as the state variable for the gas phase instead of the partial pressure $P_{T_{2}}$. By choosing $y_{T_{2}}$, the position-dependent terms for gas velocity $u_g(z)$ and total pressure $P(z)$ cancel out in the advection term, leading to a much simpler derivative.
@@ -455,43 +455,31 @@ $$
 
 ### 11.6. Mean Bubble Diameter ($d_b$)
 
-A common correlation for the mean bubble diameter in gas-liquid systems. Two empirical options are provided:
-
-- Correlation from the supplied reference (equation 35):
-
 $$
-\frac{d_b}{D} = 26\,Bn^{-0.5}\,Ga^{-0.12}\,Fr^{-0.12} \tag{35}
+d_b = (26\,Bn^{-0.5}\,Ga^{-0.12}\,Fr^{-0.12}) \cdot D 
 $$
-
-- Simpler holdup-based estimate (kept for reference):
-
-$$
-d_{b} = \frac{0.07\,D}{\epsilon_{g}^{0.5}} \tag{24}
-$$
-
-Use the first relation (eq. 35) when dimensionless groups Bn, Ga and Fr are known and a geometry/scaling-based estimate is needed; use the holdup-based estimate for quick approximate sizing.
 
 ### 11.7. Specific Interfacial Area ($a$)
 
-A correlation for the specific interfacial area in terms of the column diameter and gas holdup:
-
-$$
-a = \frac{30}{D} \left( \frac{\epsilon_{g}}{1-\epsilon_{g}} \right)^{0.5} \tag{25}
-$$
+????????????????????
 
 ### 11.8. Volumetric Mass Transfer Coefficient ($a*h_l$)
 
-An empirical correlation for the volumetric mass transfer coefficient used in the literature:
+An empirical correlation for the volumetric mass transfer coefficient used in the reference paper:
 
 $$
-\frac{a h_{l} D^{2}}{D_{T,l}} = 0.6\,Sc^{0.5}\,Bn^{0.62}\,Ga^{0.31}\,\epsilon_{g}^{1.1} \tag{22}
+\frac{a h_{l} D^{2}}{D_{T,l}} = 0.6\,Sc^{0.5}\,Bn^{0.62}\,Ga^{0.31}\,\epsilon_{g}^{1.1}
 $$
-
-From this, $a h_l$ can be obtained when $\epsilon_g$ (from eq. 21) and fluid properties are known.
+$$
+a h_{l}= \frac{(0.6\,Sc^{0.5}\,Bn^{0.62}\,Ga^{0.31}\,\epsilon_{g}^{1.1}) \cdot D_{T,l}}{D^2}
+$$
 
 ### 11.9. Mass Transfer Coefficient ($h_l$)
 
-Typical values for the mass transfer coefficient in gas-liquid systems are in the range of $1 \times 10^{-6}$ to $1 \times 10^{-4}$ $m \cdot s^{-1}$. A common starting value is $h_l = 1 \times 10^{-5}$ $m \cdot s^{-1}$. Adjust based on system response and correlations.
+When the interfacial area $a$ is known, the mass transfer coefficient can be calculated from the volumetric mass transfer coefficient:
 
+$$
+h_l = \frac{a h_{l}}{a}
+$$
 
 
