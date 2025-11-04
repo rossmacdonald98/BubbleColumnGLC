@@ -167,7 +167,7 @@ def solve(params):
         # Define the equation to solve
         eqn = ε_g / (1 - ε_g)**4 - C
         return eqn
-    ε_g_initial_guess = 0.1
+
     try:
         # bracket=[0.0001, 0.9999] tells it to *only* look in this range
         sol = root_scalar(solveEqn, args=(C,), bracket=[0.00001, 0.99999])
@@ -202,13 +202,11 @@ def solve(params):
     ε_l = 1 - ε_g  # Liquid phase fraction
 
     ψ = (ρ_l * g * ε_l * L) / P_0  # Hydrostatic pressure ratio (Eq. 8.3)
-    ν = (c_T_inlet / K_s) ** 2 / P_0  # Tritium partial pressure ratio (Eq. 8.5)
+    ν = ((c_T_inlet / K_s) ** 2) / P_0  # Tritium partial pressure ratio (Eq. 8.5)
     Bo_l = u_l * L / (ε_l * E_l)  # Bodenstein number, liquid phase (Eq. 8.9)
     phi_l = a * h_l * L / u_l  # Transfer units parameter, liquid phase (Eq. 8.11)
     Bo_g = u_g0 * L / (ε_g * E_g)  # Bodenstein number, gas phase (Eq. 8.10)
-    phi_g = (
-        0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0)
-    )  # Transfer units parameter, gas phase (Eq. 8.12)
+    phi_g = (0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0))  # Transfer units parameter, gas phase (Eq. 8.12)
 
     dimensionless_params = {
         "Bo_l": Bo_l,
