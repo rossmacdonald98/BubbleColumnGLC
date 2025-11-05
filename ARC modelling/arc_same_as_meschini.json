@@ -1,0 +1,774 @@
+{
+  "version": {
+    "pathsim_version": "0.8.3",
+    "pathview_version": "0.2.dev12+gf6e0ac326"
+  },
+  "nodes": [
+    {
+      "id": "1",
+      "type": "pulsesource",
+      "position": {
+        "x": 168.2929211797329,
+        "y": -11.07168173556972
+      },
+      "data": {
+        "label": "fusion_reaction_rate",
+        "T": "pulse_duration",
+        "amplitude": "tritium_burn_rate",
+        "duty": "AF",
+        "t_fall": "pulse_duration * 0.01",
+        "t_rise": "pulse_duration * 0.01",
+        "tau": "",
+        "nodeColor": "#DDE6ED"
+      },
+      "measured": {
+        "width": 204,
+        "height": 52
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "3",
+      "type": "amplifier",
+      "position": {
+        "x": 219.97394943237305,
+        "y": 170.22395610809326
+      },
+      "data": {
+        "label": "injection_rate",
+        "gain": "-1/TBE",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 110,
+        "height": 80
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "4",
+      "type": "process",
+      "position": {
+        "x": 765.0188068292962,
+        "y": 14.675142862649444
+      },
+      "data": {
+        "label": "blanket",
+        "initial_value": "",
+        "residence_time": "tau_blanket",
+        "source_term": "",
+        "nodeColor": "#2175b5"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "5",
+      "type": "process",
+      "position": {
+        "x": 610.3471393910123,
+        "y": 191.80113182477962
+      },
+      "data": {
+        "label": "TES",
+        "initial_value": "0",
+        "residence_time": "tau_tes",
+        "source_term": "",
+        "nodeColor": "#2175b5"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "6",
+      "type": "amplifier",
+      "position": {
+        "x": 648.973949432373,
+        "y": -55.27604389190674
+      },
+      "data": {
+        "label": "amplifier_tbr",
+        "gain": "TBR",
+        "nodeColor": "#2175b5"
+      },
+      "measured": {
+        "width": 110,
+        "height": 80
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "7",
+      "type": "process",
+      "position": {
+        "x": 206.13835929114285,
+        "y": 353.64403882958993
+      },
+      "data": {
+        "label": "storage",
+        "initial_value": "startup_inventory",
+        "residence_time": "",
+        "source_term": "",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "8",
+      "type": "splitter2",
+      "position": {
+        "x": 820.9719497613559,
+        "y": 380.556392084984
+      },
+      "data": {
+        "label": "extraction_eff",
+        "f1": "tes_efficiency",
+        "f2": "1 - tes_efficiency",
+        "nodeColor": "#2175b5"
+      },
+      "measured": {
+        "width": 124,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "9",
+      "type": "process",
+      "position": {
+        "x": 1088.6093427023734,
+        "y": 437.3247173682709
+      },
+      "data": {
+        "label": "HX",
+        "initial_value": "0",
+        "residence_time": "tau_hx",
+        "source_term": "",
+        "nodeColor": "#2175b5"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "10",
+      "type": "amplifier",
+      "position": {
+        "x": -64.97081823597054,
+        "y": 160.69327994679134
+      },
+      "data": {
+        "label": "pumping_rate",
+        "gain": "(1-TBE)/TBE",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 110,
+        "height": 80
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "11",
+      "type": "process",
+      "position": {
+        "x": -83.32751326892921,
+        "y": 299.68618932898073
+      },
+      "data": {
+        "label": "pump",
+        "initial_value": "",
+        "residence_time": "tau_vacuum_pump",
+        "source_term": "",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "12",
+      "type": "splitter2",
+      "position": {
+        "x": 82.03046640993482,
+        "y": 512.3044141607237
+      },
+      "data": {
+        "label": "dir",
+        "f1": "dir_frac",
+        "f2": "1 - dir_frac",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 124,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "13",
+      "type": "process",
+      "position": {
+        "x": 254.78265229911835,
+        "y": 616.3664399959039
+      },
+      "data": {
+        "label": "fuel cleanup",
+        "initial_value": "",
+        "residence_time": "tau_fuel_cleanup",
+        "source_term": "",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "14",
+      "type": "process",
+      "position": {
+        "x": 277.7936987654497,
+        "y": 795.736495185253
+      },
+      "data": {
+        "label": "ISS",
+        "initial_value": "",
+        "residence_time": "tau_iss",
+        "source_term": "",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 204,
+        "height": 124
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "15",
+      "type": "scope",
+      "position": {
+        "x": 1151.4717732665729,
+        "y": 93.80972426690766
+      },
+      "data": {
+        "label": "Outer Fuel Cycle",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": "",
+        "nodeColor": "#2175b5"
+      },
+      "measured": {
+        "width": 124,
+        "height": 144
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "16",
+      "type": "scope",
+      "position": {
+        "x": 63.74412878782404,
+        "y": 695.6044862960839
+      },
+      "data": {
+        "label": "Inner Fuel Cycle",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": "",
+        "nodeColor": "#22c385"
+      },
+      "measured": {
+        "width": 124,
+        "height": 144
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1-3",
+      "source": "1",
+      "target": "3",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e6-4",
+      "source": "6",
+      "target": "4",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e1-6",
+      "source": "1",
+      "target": "6",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e3-7",
+      "source": "3",
+      "target": "7",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e5-8-from_mass_flow_rate",
+      "source": "5",
+      "target": "8",
+      "sourceHandle": "mass_flow_rate",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e8-9-from_source2",
+      "source": "8",
+      "target": "9",
+      "sourceHandle": "source2",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e4-5-from_mass_flow_rate",
+      "source": "4",
+      "target": "5",
+      "sourceHandle": "mass_flow_rate",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e10-11",
+      "source": "10",
+      "target": "11",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e1-10",
+      "source": "1",
+      "target": "10",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e11-12-from_mass_flow_rate",
+      "source": "11",
+      "target": "12",
+      "sourceHandle": "mass_flow_rate",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e12-7-from_source1",
+      "source": "12",
+      "target": "7",
+      "sourceHandle": "source1",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e12-13-from_source2",
+      "source": "12",
+      "target": "13",
+      "sourceHandle": "source2",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e8-7-from_source1",
+      "source": "8",
+      "target": "7",
+      "sourceHandle": "source1",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      },
+      "selected": false
+    },
+    {
+      "id": "e9-4-from_mass_flow_rate",
+      "source": "9",
+      "target": "4",
+      "sourceHandle": "mass_flow_rate",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e13-14-from_mass_flow_rate",
+      "source": "13",
+      "target": "14",
+      "sourceHandle": "mass_flow_rate",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e14-7-from_mass_flow_rate",
+      "source": "14",
+      "target": "7",
+      "sourceHandle": "mass_flow_rate",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      },
+      "selected": false
+    },
+    {
+      "id": "e4-15-from_inv",
+      "source": "4",
+      "target": "15",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e5-15-from_inv",
+      "source": "5",
+      "target": "15",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e9-15-from_inv",
+      "source": "9",
+      "target": "15",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e11-16-from_inv",
+      "source": "11",
+      "target": "16",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e7-16-from_inv",
+      "source": "7",
+      "target": "16",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e13-16-from_inv",
+      "source": "13",
+      "target": "16",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e14-16-from_inv",
+      "source": "14",
+      "target": "16",
+      "sourceHandle": "inv",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    }
+  ],
+  "nodeCounter": 20,
+  "solverParams": {
+    "dt": "0.02",
+    "dt_min": "1e-6",
+    "dt_max": "None",
+    "Solver": "RKF21",
+    "tolerance_fpi": "1e-6",
+    "iterations_max": "100",
+    "log": "true",
+    "simulation_duration": "1000*24*3600",
+    "extra_params": "{\"tolerance_lte_rel\": 1e-4, \"tolerance_lte_abs\": 1e-5}"
+  },
+  "globalVariables": [],
+  "events": [],
+  "pythonCode": "fusion_power = 525  # MWth\ntritium_burn_rate = 9.3e-7  # kg/s\npulse_duration = 1800  # s\ntime_between_pulses = 60  # s\nTBE = 0.02\nnon_rad_loss_fraction = 1e-4\nAF = 0.7\ntritium_processing_time = 4 * 3600  # s\ndoubling_time = 2 * 365 * 24 * 3600  # s\ndir_frac = 0.3\nreserve_time = 24 * 3600  # s\n\ntau_blanket = 1.25 * 3600  # s\ntau_fw = 1000  # s\ntau_divertor = 1000  # s\ntau_tes = 24 * 3600  # s\ntau_hx = 1000  # s\ntau_vacuum_pump = 600  # s\ntau_fuel_cleanup = 0.3 * 3600  # s\ntau_iss = 3.7 * 3600  # s\ntau_detritiation = 1 * 3600  # s\n\nTBR = 1.1\ntes_efficiency = 0.7\nstartup_inventory = 1"
+}

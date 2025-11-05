@@ -1,0 +1,12 @@
+name: fuel-cycle-paper
+channels:
+  - conda-forge
+dependencies:
+  - numpy
+  - pandas
+  - matplotlib
+  - ipykernel
+  - scipy
+  - festim
+  - pip:
+    - git+https://github.com/festim-dev/PathView@glc
