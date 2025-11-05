@@ -47,10 +47,10 @@ def main():
     }
     
     # Run simulation
-    result = bubble_col_glc.solve(params)
+    [results, solution] = bubble_col_glc.solve(params)
     
     # Print results
-    for key, value in result.items():
+    for key, value in results.items():
         print(f"{key}: {value}")
 
 
