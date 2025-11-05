@@ -8,5 +8,6 @@ dependencies:
   - ipykernel
   - scipy
   - festim
+  - pip
   - pip:
     - git+https://github.com/festim-dev/PathView@glc
