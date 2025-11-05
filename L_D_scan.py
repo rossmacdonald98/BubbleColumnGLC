@@ -45,12 +45,13 @@ def main():
         "c_T_inlet": 1.96e-2,   # mol/m^3
         "y_T2_in": 0.0,
         "P_0": 5e5,
+        "BCs": "C-C",
         "Flow_l": 560,         # kg/s
         "Flow_g": 10,          # mol/s
         "T": 623,
     }
 
-    diameters = np.linspace(0.05, 5.0, 10)   # m
+    diameters = np.linspace(0.05, 4, 40)   # m
     lengths = [1.0, 2.0, 3.0, 4.0]           # m
     elements = 50
 
