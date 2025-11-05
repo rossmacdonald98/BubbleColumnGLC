@@ -49,9 +49,8 @@ def solve(params):
             dS2_dxi = dy_T2_dxi
 
             # Equation for d(S[3])/d(xi) = d^2(y_T2)/d(xi)^2 from eq (11)
-            # Avoid division by zero if (1 - psi * xi) is close to zero at xi=1
+            # Regularise denominator to avoid extreme scaling when 1 - psi*xi -> 0
             denominator = 1 - psi * xi
-            denominator = np.where(np.isclose(denominator, 0), 1e-9, denominator)
 
             term1 = (1 + 2 * psi / Bo_g) * dy_T2_dxi
             term2 = phi_g * theta
@@ -65,49 +64,58 @@ def solve(params):
             Sa: solution at xi = 0 (liquid outlet)
             Sb: solution at xi = 1 (liquid inlet)
             """
-            # Residuals that should be zero for a valid solution.
-            # Based on equations (16) and (17) in the paper.
+            if BCs == "C-C":
+                # Closed-Closed case boundary conditions
+                # At xi = 0: dx_T/d(xi) = 0
+                res1 = Sa[1]  # Eq. 10.1
 
-            # At xi = 0: dx_T/d(xi) = 0
-            res1 = Sa[1]  # Eq. 10.1
+                # At xi = 1: x_T(1) = 1 - (1/Bo_l) * dx_T/d(xi)|_1
+                res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1])  # Eq. 10.2
 
-            # At xi = 1: x_T(1) = 1 - (1/Bo_l) * dx_T/d(xi)|_1
-            res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1]) # Eq. 10.2
+                # At xi = 0: y_T2(0) = y_T2(0-) + (1/Bo_g) * dy_T2/d(xi)|_0
+                res3 = Sa[2] - y_T2_in - (1 / Bo_g) * Sa[3]  # Eq. 10.3
 
-            # At xi = 0: y_T2(0) = y_T2(0-) + (1/Bo_g) * dy_T2/d(xi)|_0
-            res3 = Sa[2] - y_T2_in - (1 / Bo_g) * Sa[3]  # Eq. 10.3
+                # At xi = 1: dy_T2/d(xi) = 0
+                res4 = Sb[3]  # Eq. 10.4
 
-            # At xi = 1: dy_T2/d(xi) = 0
-            res4 = Sb[3]  # Eq. 10.4
+                return np.array([res1, res2, res3, res4])
+            elif BCs == "O-C":
+                # Open-Closed case boundary conditions (from provided equations)
+                # At xi = 0 (liquid outlet): d x_T / d xi = 0
+                res1 = Sa[1]  # corresponds to dC_T/dz|_{z=0} = 0 (eq. 3.9)
 
-            return np.array([res1, res2, res3, res4])
+                # At xi = 1 (liquid inlet): x_T(1) = 1  (C_T(L) = C_T(L^+)) (eq. 3.8)
+                res2 = Sb[0] - 1.0
+
+                # At xi = 0 (gas inlet): y_T2(0) = y_T2(0^-)  (no dispersion jump) (eq. 3.10)
+                res3 = Sa[2] - y_T2_in
+
+                # At xi = 1 (gas outlet): dy_T2/dxi = 0 (eq. 3.11)
+                res4 = Sb[3]
+
+                return np.array([res1, res2, res3, res4])
 
         # Set up the mesh and an initial guess for the solver.
         xi = np.linspace(0, 1, elements + 1)
 
-        # An initial guess that is physically plausible can significantly help convergence.
-        # We expect liquid concentration (x_T) to decrease from inlet (xi=1) to outlet (xi=0).
-        # We expect gas concentration (y_T2) to increase from inlet (xi=0) to outlet (xi=1).
         y_guess = np.zeros((4, xi.size))
-        y_guess[0, :] = np.linspace(0.5, 1.0, xi.size)  # Guess for x_T (linear decrease)
-        y_guess[1, :] = -0.5 # Guess for dx_T/dxi
-        y_guess[2, :] = np.linspace(y_T2_in, y_T2_in + 1e-4, xi.size)  # Guess for y_T2 (linear increase)
-        y_guess[3, :] = 1e-4 # Guess for dy_T2/dxi
 
         # Run the BVP solver
         sol = solve_bvp(ode_system, boundary_conditions, xi, y_guess, tol=1e-5, max_nodes=10000)
 
         return sol
 
-
-
-
-
     # --- Unpack User Input Parameters ---
     # Bubble Column parameters
     c_T_inlet = params["c_T_inlet"]  # mol/m^3 (c_T(L+)), Inlet tritium concentration in liquid just before inlet
     y_T2_in = params["y_T2_in"]  # Inlet tritium molar fraction in gas (0 = pure purge gas)
+
+    # If y_T2_in is exactly 0, initialise as very small value (1e-30) to avoid model instability.
+    if y_T2_in == 0:
+        y_T2_in = 1e-20 
+
     P_0 = params["P_0"]  # Pa, Gas total pressure at (gas) inlet)
+    BCs = params["BCs"]  # Boundary conditions type: "O-C" (Open-Closed) or "C-C" (Closed-Closed)
 
     L = params["L"]  # m, Height of the bubble column
     D = params["D"]  # m, Column diameter
@@ -178,6 +186,9 @@ def solve(params):
 
     ε_g = sol.root # Gas phase fraction
 
+    ε_l = 1 - ε_g  # Liquid phase fraction
+
+
     # Calculate outlet pressure hydrostatically & check non-negative
     P_outlet = P_0 - ( ρ_l * (1 - ε_g) * g * L)
 
@@ -199,8 +210,6 @@ def solve(params):
     h_l = h_l_a / a # Mass transfer coefficient
 
     # Calculate dimensionless values
-    ε_l = 1 - ε_g  # Liquid phase fraction
-
     ψ = (ρ_l * g * ε_l * L) / P_0  # Hydrostatic pressure ratio (Eq. 8.3)
     ν = ((c_T_inlet / K_s) ** 2) / P_0  # Tritium partial pressure ratio (Eq. 8.5)
     Bo_l = u_l * L / (ε_l * E_l)  # Bodenstein number, liquid phase (Eq. 8.9)
