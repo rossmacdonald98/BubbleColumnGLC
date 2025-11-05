@@ -2,6 +2,7 @@ import pathview
 import json
 from pathsim.blocks import Scope
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # read graph data from a JSON file
 with open("arc_same_as_meschini.json", "r") as f:
@@ -9,13 +10,12 @@ with open("arc_same_as_meschini.json", "r") as f:
 
 model, duration = pathview.make_pathsim_model(graph_data)
 
-model.run(20 * 24 * 3600)
+model.run(300 * 24 * 3600)
 
 scopes = [block for block in model.blocks if isinstance(block, Scope)]
 
 for i, scope in enumerate(scopes):
     sim_time, data = scope.read()
-    plt.figure(i)
     for p, d in enumerate(data):
         lb = scope.labels[p] if p < len(scope.labels) else f"port {p}"
         plt.plot(sim_time / 3600 / 24, d, label=lb)
@@ -28,3 +28,8 @@ for i, scope in enumerate(scopes):
     plt.ylim(bottom=1e-3, top=1)
     plt.xlim(left=1e-1)
 plt.show()
+
+
+# read data from a url
+url = "https://raw.githubusercontent.com/SamueleMeschini/fuel-cycle/refs/heads/main/postprocessing/data/inventory_evolution_tbz1h.csv"
+data = pd.read_csv(url)
