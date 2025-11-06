@@ -27,6 +27,7 @@ def _calculate_properties(params):
     P_0 = params["P_0"]
 
     # --- Fluid Properties (Temperature Dependent) ---
+    # TODO add references
     rho_l = 10.45e3 * (1 - 1.61e-4 * T)  # kg/m^3, Liquid (LiPb) density
     sigma_l = 0.52 - 0.11e-3 * T  # N/m, Surface tension, liquid-gas interface
     mu_l = 1.87e-4 * np.exp(11640 / (R * T))  # Pa.s, Dynamic viscosity of liquid
