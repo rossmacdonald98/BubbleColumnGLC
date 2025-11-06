@@ -1,0 +1,167 @@
+{
+  "version": {
+    "pathsim_version": "0.12.1",
+    "pathview_version": "0.2.dev12+gf6e0ac326"
+  },
+  "nodes": [
+    {
+      "id": "1",
+      "type": "wall",
+      "position": {
+        "x": 614,
+        "y": 304
+      },
+      "data": {
+        "label": "wall 1",
+        "nodeColor": "#DDE6ED",
+        "D_0": "1",
+        "E_D": "0",
+        "T": "0.001",
+        "tau": "0.001",
+        "n_vertices": "",
+        "surface_area": "1",
+        "temperature": "300",
+        "thickness": "1"
+      },
+      "measured": {
+        "width": 74,
+        "height": 204
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "2",
+      "type": "constant",
+      "position": {
+        "x": 346,
+        "y": 336
+      },
+      "data": {
+        "label": "constant 2",
+        "nodeColor": "#DDE6ED",
+        "value": ""
+      },
+      "measured": {
+        "width": 204,
+        "height": 52
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "3",
+      "type": "constant",
+      "position": {
+        "x": 761,
+        "y": 330.5
+      },
+      "data": {
+        "label": "constant 3",
+        "nodeColor": "#DDE6ED",
+        "value": "0"
+      },
+      "measured": {
+        "width": 204,
+        "height": 52
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "4",
+      "type": "scope",
+      "position": {
+        "x": 863.0936732263499,
+        "y": 453.8026361044469
+      },
+      "data": {
+        "label": "scope 4",
+        "nodeColor": "#DDE6ED",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": ""
+      },
+      "measured": {
+        "width": 124,
+        "height": 144
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "e2-1-to_c_0",
+      "source": "2",
+      "target": "1",
+      "sourceHandle": null,
+      "targetHandle": "c_0",
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e3-1-to_c_L",
+      "source": "3",
+      "target": "1",
+      "sourceHandle": null,
+      "targetHandle": "c_L",
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e1-4-from_flux_L",
+      "source": "1",
+      "target": "4",
+      "sourceHandle": "flux_L",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    }
+  ],
+  "nodeCounter": 5,
+  "solverParams": {
+    "dt": "0.001",
+    "dt_min": "1e-16",
+    "dt_max": "",
+    "Solver": "SSPRK33",
+    "tolerance_fpi": "1e-10",
+    "iterations_max": "200",
+    "log": "true",
+    "simulation_duration": "1",
+    "extra_params": "{}"
+  },
+  "globalVariables": [],
+  "events": [],
+  "pythonCode": "# Define your Python variables and functions here\n# Example:\n# my_variable = 42\n# def my_function(x):\n#     return x * 2\n"
+}
