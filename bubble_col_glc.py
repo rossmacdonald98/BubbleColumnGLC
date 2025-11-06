@@ -12,7 +12,7 @@ from scipy.optimize import root_scalar
 import scipy.constants as const
 
 # --- Physical Constants ---
-g = 9.81  # m/s^2, Gravitational acceleration
+g = const.g  # m/s^2, Gravitational acceleration
 R = const.R  # J/(mol·K), Universal gas constant
 N_A = const.N_A  # 1/mol, Avogadro's number
 M_LiPb = 2.875e-25  # Kg/molecule, Lipb molecular mass
@@ -43,8 +43,8 @@ def _calculate_properties(params):
     u_g0 = Q_g / A  # m/s, Superficial gas velocity at inlet
 
     # --- Dimensionless Numbers for Correlations ---
-    Bn = (g * D ** 2 * rho_l) / sigma_l  # Bond number
-    Ga = (g * D ** 3) / nu_l ** 2  # Galilei number
+    Bn = (g * D**2 * rho_l) / sigma_l  # Bond number
+    Ga = (g * D**3) / nu_l**2  # Galilei number
     Sc = nu_l / D_T  # Schmidt number
     Fr = u_g0 / (g * D) ** 0.5  # Froude number
 
@@ -64,20 +64,31 @@ def _calculate_properties(params):
     epsilon_l = 1 - epsilon_g  # Liquid phase fraction
 
     # Dispersion coefficients
-    E_l = (D * u_g0) / ((13 * Fr) / (1 + 6.5 * (Fr ** 0.8)))
-    E_g = (0.2 * D ** 2) * u_g0
+    E_l = (D * u_g0) / ((13 * Fr) / (1 + 6.5 * (Fr**0.8)))
+    E_g = (0.2 * D**2) * u_g0
 
     # Interfacial area and mass transfer coefficients
-    d_b = (26 * (Bn ** -0.5) * (Ga ** -0.12) * (Fr ** -0.12)) * D
+    d_b = (26 * (Bn**-0.5) * (Ga**-0.12) * (Fr**-0.12)) * D
     a = 6 * epsilon_g / d_b
     h_l_a = D_T * (0.6 * Sc**0.5 * Bn**0.62 * Ga**0.31 * epsilon_g**1.1) / (D**2)
     h_l = h_l_a / a  # Mass transfer coefficient
 
     return {
-        "rho_l": rho_l, "sigma_l": sigma_l, "mu_l": mu_l, "nu_l": nu_l, "K_s": K_s,
-        "Q_l": Q_l, "Q_g": Q_g, "u_l": u_l, "u_g0": u_g0,
-        "epsilon_g": epsilon_g, "epsilon_l": epsilon_l, "E_l": E_l, "E_g": E_g,
-        "a": a, "h_l": h_l,
+        "rho_l": rho_l,
+        "sigma_l": sigma_l,
+        "mu_l": mu_l,
+        "nu_l": nu_l,
+        "K_s": K_s,
+        "Q_l": Q_l,
+        "Q_g": Q_g,
+        "u_l": u_l,
+        "u_g0": u_g0,
+        "epsilon_g": epsilon_g,
+        "epsilon_l": epsilon_l,
+        "E_l": E_l,
+        "E_g": E_g,
+        "a": a,
+        "h_l": h_l,
     }
 
 
@@ -86,10 +97,16 @@ def _calculate_dimensionless_groups(params, phys_props):
     # Unpack parameters
     L, T, P_0, c_T_inlet = params["L"], params["T"], params["P_0"], params["c_T_inlet"]
     rho_l, K_s, u_l, u_g0 = (
-        phys_props["rho_l"], phys_props["K_s"], phys_props["u_l"], phys_props["u_g0"]
+        phys_props["rho_l"],
+        phys_props["K_s"],
+        phys_props["u_l"],
+        phys_props["u_g0"],
     )
     epsilon_g, epsilon_l, E_l, E_g = (
-        phys_props["epsilon_g"], phys_props["epsilon_l"], phys_props["E_l"], phys_props["E_g"]
+        phys_props["epsilon_g"],
+        phys_props["epsilon_l"],
+        phys_props["E_l"],
+        phys_props["E_g"],
     )
     a, h_l = phys_props["a"], phys_props["h_l"]
 
@@ -99,18 +116,27 @@ def _calculate_dimensionless_groups(params, phys_props):
     Bo_l = u_l * L / (epsilon_l * E_l)  # Bodenstein number, liquid
     phi_l = a * h_l * L / u_l  # Transfer units, liquid (Eq. 8.11)
     Bo_g = u_g0 * L / (epsilon_g * E_g)  # Bodenstein number, gas
-    phi_g = (0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0))
+    phi_g = 0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0)
 
     return {
-        "Bo_l": Bo_l, "phi_l": phi_l, "Bo_g": Bo_g, "phi_g": phi_g, "psi": psi, "nu": nu
+        "Bo_l": Bo_l,
+        "phi_l": phi_l,
+        "Bo_g": Bo_g,
+        "phi_g": phi_g,
+        "psi": psi,
+        "nu": nu,
     }
 
 
 def _solve_bvp_system(dim_params, y_T2_in, BCs, elements):
     """Sets up and solves the Boundary Value Problem for tritium extraction."""
     Bo_l, phi_l, Bo_g, phi_g, psi, nu = (
-        dim_params["Bo_l"], dim_params["phi_l"], dim_params["Bo_g"],
-        dim_params["phi_g"], dim_params["psi"], dim_params["nu"]
+        dim_params["Bo_l"],
+        dim_params["phi_l"],
+        dim_params["Bo_g"],
+        dim_params["phi_g"],
+        dim_params["psi"],
+        dim_params["nu"],
     )
 
     def ode_system(xi, S):
@@ -146,7 +172,9 @@ def _solve_bvp_system(dim_params, y_T2_in, BCs, elements):
 
     xi = np.linspace(0, 1, elements + 1)
     y_guess = np.zeros((4, xi.size))
-    return solve_bvp(ode_system, boundary_conditions, xi, y_guess, tol=1e-5, max_nodes=10000)
+    return solve_bvp(
+        ode_system, boundary_conditions, xi, y_guess, tol=1e-5, max_nodes=10000
+    )
 
 
 def _process_results(solution, params, phys_props, dim_params):
@@ -199,6 +227,7 @@ def _process_results(solution, params, phys_props, dim_params):
 
     return [results, solution]
 
+
 def solve(params):
     """
     Main solver function for the bubble column model.
@@ -219,7 +248,9 @@ def solve(params):
     phys_props = _calculate_properties(params)
 
     # Pre-solver check for non-physical outlet pressure
-    P_outlet = params["P_0"] - (phys_props["rho_l"] * (1 - phys_props["epsilon_g"]) * g * params["L"])
+    P_outlet = params["P_0"] - (
+        phys_props["rho_l"] * (1 - phys_props["epsilon_g"]) * g * params["L"]
+    )
     if P_outlet <= 0:
         raise ValueError(
             f"Calculated gas outlet pressure is non-positive ({P_outlet:.2e} Pa). "
@@ -238,5 +269,3 @@ def solve(params):
     [results, solution] = _process_results(solution, params, phys_props, dim_params)
 
     return [results, solution]
-
-    
