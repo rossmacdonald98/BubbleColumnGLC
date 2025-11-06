@@ -160,10 +160,10 @@ def _solve_bvp_system(dim_params, y_T2_in, BCs, elements):
     def boundary_conditions(Sa, Sb):
         """Defines the boundary conditions at xi=0 (Sa) and xi=1 (Sb)."""
         if BCs == "C-C":  # Closed-Closed
-            res1 = Sa[1]  # dx_T/d(xi) = 0 at xi=0
+            res1 = Sa[1]  # dx_T/d(xi) = 0 at xi=0 (Eq. 9.1.1)
             res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1])  # x_T(1) = 1 - ... (Eq. 9.1.2)
             res3 = Sa[2] - y_T2_in - (1 / Bo_g) * Sa[3]  # y_T2(0) = y_T2_in + ... (Eq. 9.1.3)
-            res4 = Sb[3]  # dy_T2/d(xi) = 0 at xi=1
+            res4 = Sb[3]  # dy_T2/d(xi) = 0 at xi=1 (Eq. 9.1.4)
         elif BCs == "O-C":  # Open-Closed
             res1 = Sa[1]  # dx_T/d(xi) = 0 at xi=0 (Eq. 9.2.1)
             res2 = Sb[0] - 1.0  # x_T(1) = 1 (Eq. 9.2.2)
