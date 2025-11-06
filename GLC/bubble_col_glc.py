@@ -186,7 +186,7 @@ def _process_results(solution, params, phys_props, dim_params):
 
     # Unpack parameters
     c_T_inlet, P_0, T = params["c_T_inlet"], params["P_0"], params["T"]
-    y_T2_in = params.get("y_T2_in_adj", params["y_T2_in"])
+    y_T2_in = params["y_T2_in"]
 
     # Dimensionless results
     x_T_outlet_dimless = solution.y[0, 0]
@@ -240,10 +240,7 @@ def solve(params):
         dict: A dictionary containing the simulation results.
     """
     # Adjust inlet gas concentration to avoid numerical instability at zero
-    if params["y_T2_in"] == 0:
-        params["y_T2_in_adj"] = 1e-20
-    else:
-        params["y_T2_in_adj"] = params["y_T2_in"]
+    y_T2_in = max(params["y_T2_in"], 1e-20)
 
     # 1. Calculate physical, hydrodynamic, and mass transfer properties
     phys_props = _calculate_properties(params)
@@ -262,9 +259,7 @@ def solve(params):
     dim_params = _calculate_dimensionless_groups(params, phys_props)
 
     # 3. Solve the boundary value problem
-    solution = _solve_bvp_system(
-        dim_params, params["y_T2_in_adj"], params["BCs"], params["elements"]
-    )
+    solution = _solve_bvp_system(dim_params, y_T2_in, params["BCs"], params["elements"])
 
     # 4. Process and return the results in a dimensional format
     [results, solution] = _process_results(solution, params, phys_props, dim_params)
