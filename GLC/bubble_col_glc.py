@@ -44,14 +44,14 @@ def _calculate_properties(params):
     u_g0 = Q_g / A  # m/s, Superficial gas velocity at inlet
 
     # --- Dimensionless Numbers for Correlations ---
-    Bn = (g * D**2 * rho_l) / sigma_l  # Bond number
-    Ga = (g * D**3) / nu_l**2  # Galilei number
-    Sc = nu_l / D_T  # Schmidt number
-    Fr = u_g0 / (g * D) ** 0.5  # Froude number
+    Bn = (g * D**2 * rho_l) / sigma_l  # Bond number (Eq. 10.1.2)
+    Ga = (g * D**3) / nu_l**2  # Galilei number (Eq. 10.1.3)
+    Sc = nu_l / D_T  # Schmidt number (Eq. 10.1.4)
+    Fr = u_g0 / (g * D) ** 0.5  # Froude number (Eq. 10.1.1)
 
     # --- Hydrodynamic and Mass Transfer Parameters ---
-    # Gas hold-up (ε_g) from correlation: C = ε_g / (1 - ε_g)^4
-    C = 0.2 * (Bn ** (1 / 8)) * (Ga ** (1 / 12)) * Fr
+    # Gas hold-up (ε_g) from correlation (Eq. 10.4.1)
+    C = 0.2 * (Bn ** (1 / 8)) * (Ga ** (1 / 12)) * Fr # C = ε_g / (1 - ε_g)^4
 
     def _f_holdup(e, C_val):
         return e / (1 - e) ** 4 - C_val
@@ -65,13 +65,13 @@ def _calculate_properties(params):
     epsilon_l = 1 - epsilon_g  # Liquid phase fraction
 
     # Dispersion coefficients
-    E_l = (D * u_g0) / ((13 * Fr) / (1 + 6.5 * (Fr**0.8)))
-    E_g = (0.2 * D**2) * u_g0
+    E_l = (D * u_g0) / ((13 * Fr) / (1 + 6.5 * (Fr**0.8)))  # Eq. 10.2.1
+    E_g = (0.2 * D**2) * u_g0  # Eq. 10.3.1
 
     # Interfacial area and mass transfer coefficients
-    d_b = (26 * (Bn**-0.5) * (Ga**-0.12) * (Fr**-0.12)) * D
+    d_b = (26 * (Bn**-0.5) * (Ga**-0.12) * (Fr**-0.12)) * D  # Eq. 10.6.1
     a = 6 * epsilon_g / d_b
-    h_l_a = D_T * (0.6 * Sc**0.5 * Bn**0.62 * Ga**0.31 * epsilon_g**1.1) / (D**2)
+    h_l_a = D_T * (0.6 * Sc**0.5 * Bn**0.62 * Ga**0.31 * epsilon_g**1.1) / (D**2)  # Eq. 10.8.1
     h_l = h_l_a / a  # Mass transfer coefficient
 
     return {
@@ -112,12 +112,12 @@ def _calculate_dimensionless_groups(params, phys_props):
     a, h_l = phys_props["a"], phys_props["h_l"]
 
     # Calculate dimensionless groups
-    psi = (rho_l * g * epsilon_l * L) / P_0  # Hydrostatic pressure ratio
-    nu = ((c_T_inlet / K_s) ** 2) / P_0  # Equilibrium ratio
-    Bo_l = u_l * L / (epsilon_l * E_l)  # Bodenstein number, liquid
-    phi_l = a * h_l * L / u_l  # Transfer units, liquid (Eq. 8.11)
-    Bo_g = u_g0 * L / (epsilon_g * E_g)  # Bodenstein number, gas
-    phi_g = 0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0)
+    psi = (rho_l * g * epsilon_l * L) / P_0  # Hydrostatic pressure ratio (Eq. 7.3)
+    nu = ((c_T_inlet / K_s) ** 2) / P_0  # Equilibrium ratio (Eq. 7.5)
+    Bo_l = u_l * L / (epsilon_l * E_l)  # Bodenstein number, liquid (Eq. 7.9)
+    phi_l = a * h_l * L / u_l  # Transfer units, liquid (Eq. 7.11)
+    Bo_g = u_g0 * L / (epsilon_g * E_g)  # Bodenstein number, gas (Eq. 7.10)
+    phi_g = 0.5 * (R * T * c_T_inlet / P_0) * (a * h_l * L / u_g0)  # Eq. 7.12
 
     return {
         "Bo_l": Bo_l,
@@ -146,14 +146,14 @@ def _solve_bvp_system(dim_params, y_T2_in, BCs, elements):
         S = [x_T, dx_T/d(xi), y_T2, dy_T2/d(xi)]
         """
         x_T, dx_T_dxi, y_T2, dy_T2_dxi = S
-        theta = x_T - np.sqrt(np.maximum(0, (1 - psi * xi) * y_T2 / nu))
+        theta = x_T - np.sqrt(np.maximum(0, (1 - psi * xi) * y_T2 / nu))  # Eq. 7.8
 
         dS0_dxi = dx_T_dxi  # d(x_T)/d(xi)
-        dS1_dxi = Bo_l * (phi_l * theta - dx_T_dxi)  # d^2(x_T)/d(xi)^2
+        dS1_dxi = Bo_l * (phi_l * theta - dx_T_dxi)  # Rearranged from Eq. 8.1.4
         dS2_dxi = dy_T2_dxi  # d(y_T2)/d(xi)
         term1 = (1 + 2 * psi / Bo_g) * dy_T2_dxi
         term2 = phi_g * theta
-        dS3_dxi = (Bo_g / (1 - psi * xi)) * (term1 - term2)  # d^2(y_T2)/d(xi)^2
+        dS3_dxi = (Bo_g / (1 - psi * xi)) * (term1 - term2)  # Rearranged from Eq. 8.2.10
 
         return np.vstack((dS0_dxi, dS1_dxi, dS2_dxi, dS3_dxi))
 
@@ -161,14 +161,14 @@ def _solve_bvp_system(dim_params, y_T2_in, BCs, elements):
         """Defines the boundary conditions at xi=0 (Sa) and xi=1 (Sb)."""
         if BCs == "C-C":  # Closed-Closed
             res1 = Sa[1]  # dx_T/d(xi) = 0 at xi=0
-            res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1])  # x_T(1) = 1 - ...
-            res3 = Sa[2] - y_T2_in - (1 / Bo_g) * Sa[3]  # y_T2(0) = y_T2_in + ...
+            res2 = Sb[0] - (1 - (1 / Bo_l) * Sb[1])  # x_T(1) = 1 - ... (Eq. 9.1.2)
+            res3 = Sa[2] - y_T2_in - (1 / Bo_g) * Sa[3]  # y_T2(0) = y_T2_in + ... (Eq. 9.1.3)
             res4 = Sb[3]  # dy_T2/d(xi) = 0 at xi=1
         elif BCs == "O-C":  # Open-Closed
-            res1 = Sa[1]  # dx_T/d(xi) = 0 at xi=0
-            res2 = Sb[0] - 1.0  # x_T(1) = 1
-            res3 = Sa[2] - y_T2_in  # y_T2(0) = y_T2_in
-            res4 = Sb[3]  # dy_T2/d(xi) = 0 at xi=1
+            res1 = Sa[1]  # dx_T/d(xi) = 0 at xi=0 (Eq. 9.2.1)
+            res2 = Sb[0] - 1.0  # x_T(1) = 1 (Eq. 9.2.2)
+            res3 = Sa[2] - y_T2_in  # y_T2(0) = y_T2_in (Eq. 9.2.3)
+            res4 = Sb[3]  # dy_T2/d(xi) = 0 at xi=1 (Eq. 9.2.4)
         return np.array([res1, res2, res3, res4])
 
     xi = np.linspace(0, 1, elements + 1)
@@ -181,8 +181,7 @@ def _solve_bvp_system(dim_params, y_T2_in, BCs, elements):
 def _process_results(solution, params, phys_props, dim_params):
     """Processes the BVP solution to produce dimensional results."""
     if not solution.success:
-        print("BVP solver failed to converge.")
-        return {"error": "BVP solver failed"}
+        raise RuntimeError("BVP solver did not converge.")
 
     # Unpack parameters
     c_T_inlet, P_0, T = params["c_T_inlet"], params["P_0"], params["T"]
