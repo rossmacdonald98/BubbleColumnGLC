@@ -363,7 +363,30 @@ To solve this system numerically, it is standard practice to convert the two sec
 $$
 S = \begin{bmatrix} S_0 \\ S_1 \\ S_2 \\ S_3 \end{bmatrix} = \begin{bmatrix} x_T \\ dx_T/d\xi \\ y_{T_2} \\ dy_{T_2}/d\xi \end{bmatrix}
 $$
-The system can then be written as $\frac{dS}{d\xi}$ by rearranging the equations in (9.3.1) to solve for the second derivatives:
+The goal is to express the derivative of this vector, $\frac{dS}{d\xi}$, in terms of the components of $S$ itself. The first and third equations of the system are direct definitions from the state vector:
+- $dS_0/d\xi = d(x_T)/d\xi = S_1$
+- $dS_2/d\xi = d(y_{T_2})/d\xi = S_3$
+
+For the second and fourth equations, we rearrange the governing ODEs (9.3.1) to solve for the second derivatives, $d^2x_T/d\xi^2$ (which is $dS_1/d\xi$) and $d^2y_{T_2}/d\xi^2$ (which is $dS_3/d\xi$).
+
+**For the liquid phase:**
+$$
+\frac{1}{Bo_{l}}\frac{d^{2}x_{T}}{d\xi^{2}} + \frac{dx_{T}}{d\xi} - \phi_{l}\theta = 0 \quad \rightarrow \quad \frac{d^{2}x_{T}}{d\xi^{2}} = Bo_l(\phi_l\theta - \frac{dx_{T}}{d\xi})
+$$
+In terms of the state vector, this becomes:
+$$
+\frac{dS_1}{d\xi} = Bo_l(\phi_l\theta - S_1)
+$$
+
+**For the gas phase:**
+$$
+\frac{(1-\xi\psi)}{Bo_{g}}\frac{d^{2}y_{T_{2}}}{d\xi^{2}} - \left(1 + \frac{2\psi}{Bo_{g}}\right)\frac{dy_{T_{2}}}{d\xi} + \phi_{g}\theta = 0 \quad \rightarrow \quad \frac{d^{2}y_{T_{2}}}{d\xi^{2}} = \frac{Bo_g}{1-\xi\psi}\left[\left(1 + \frac{2\psi}{Bo_{g}}\right)\frac{dy_{T_{2}}}{d\xi} - \phi_{g}\theta\right]
+$$
+In terms of the state vector, this becomes:
+$$
+\frac{dS_3}{d\xi} = \frac{Bo_g}{1-\xi\psi}\left[\left(1 + \frac{2\psi}{Bo_{g}}\right)S_3 - \phi_{g}\theta\right]
+$$
+Leading to the system of four first-order ODEs:
 $$
 \frac{dS}{d\xi} =
 \begin{cases}
@@ -481,5 +504,3 @@ When the interfacial area $a$ is known, the mass transfer coefficient can be cal
 $$
 h_l = \frac{a h_{l}}{a}
 $$
-
-
