@@ -183,7 +183,7 @@ def _process_results(solution, params, phys_props, dim_params):
     results = {
         "Total tritium in [T/s]": n_T_in_liquid + n_T_in_gas,
         "Total tritium out [T/s]": n_T_out_liquid + n_T_out_gas,
-        "extraction_efficiency [%]": efficiency * 100,
+        "extraction_efficiency [fraction]": efficiency,
         "c_T_inlet [mol/m^3]": c_T_inlet,
         "c_T_outlet [mol/m^3]": c_T_outlet,
         "liquid_vol_flow [m^3/s]": Q_l,
