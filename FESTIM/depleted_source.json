@@ -1,0 +1,307 @@
+{
+  "version": {
+    "pathsim_version": "0.12.1",
+    "pathview_version": "0.2.dev12+gf6e0ac326"
+  },
+  "nodes": [
+    {
+      "id": "1",
+      "type": "wall",
+      "position": {
+        "x": 628.6709868935026,
+        "y": 300.61438763996097
+      },
+      "data": {
+        "label": "Wall",
+        "nodeColor": "#DDE6ED",
+        "D_0": "diffusivity",
+        "E_D": "0",
+        "n_vertices": "",
+        "surface_area": "A",
+        "temperature": "temperature",
+        "thickness": "l",
+        "T": "dt",
+        "tau": "dt"
+      },
+      "measured": {
+        "width": 74,
+        "height": 204
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "3",
+      "type": "constant",
+      "position": {
+        "x": 790.6889279923901,
+        "y": 263.8648505059689
+      },
+      "data": {
+        "label": "Ext. concentration",
+        "nodeColor": "#DDE6ED",
+        "value": "0"
+      },
+      "measured": {
+        "width": 204,
+        "height": 52
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "4",
+      "type": "scope",
+      "position": {
+        "x": 863.0936732263499,
+        "y": 453.8026361044469
+      },
+      "data": {
+        "label": "Permeation flux",
+        "nodeColor": "#DDE6ED",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": ""
+      },
+      "measured": {
+        "width": 124,
+        "height": 144
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "5",
+      "type": "integrator",
+      "position": {
+        "x": 81.00087525361297,
+        "y": 237.94183537132506
+      },
+      "data": {
+        "label": "Enclosure pressure",
+        "nodeColor": "#DDE6ED",
+        "initial_value": "initial_pressure",
+        "reset_times": ""
+      },
+      "measured": {
+        "width": 204,
+        "height": 52
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "6",
+      "type": "function",
+      "position": {
+        "x": 318.2614187900461,
+        "y": 305.35149302609057
+      },
+      "data": {
+        "label": "Henry's law",
+        "nodeColor": "#DDE6ED",
+        "inputCount": 1,
+        "outputCount": 1,
+        "func": "lambda P: solubility* P"
+      },
+      "measured": {
+        "width": 204,
+        "height": 84
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "7",
+      "type": "function",
+      "position": {
+        "x": -196.29583951104826,
+        "y": 298.8927577063188
+      },
+      "data": {
+        "label": "f(flux)",
+        "nodeColor": "#DDE6ED",
+        "inputCount": 1,
+        "outputCount": 1,
+        "func": "lambda phi: phi * R*temperature/V/avogadro"
+      },
+      "measured": {
+        "width": 204,
+        "height": 84
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "9",
+      "type": "scope",
+      "position": {
+        "x": 503.0123239255554,
+        "y": 52.36565990021049
+      },
+      "data": {
+        "label": "Pressure",
+        "nodeColor": "#DDE6ED",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": ""
+      },
+      "measured": {
+        "width": 124,
+        "height": 144
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "e3-1-to_c_L",
+      "source": "3",
+      "target": "1",
+      "sourceHandle": null,
+      "targetHandle": "c_L",
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e1-4-from_flux_L",
+      "source": "1",
+      "target": "4",
+      "sourceHandle": "flux_L",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e5-6-to_target-0",
+      "source": "5",
+      "target": "6",
+      "sourceHandle": null,
+      "targetHandle": "target-0",
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e6-1-from_source-0-to_c_0",
+      "source": "6",
+      "target": "1",
+      "sourceHandle": "source-0",
+      "targetHandle": "c_0",
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e7-5-from_source-0",
+      "source": "7",
+      "target": "5",
+      "sourceHandle": "source-0",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e1-7-from_flux_0-to_target-0",
+      "source": "1",
+      "target": "7",
+      "sourceHandle": "flux_0",
+      "targetHandle": "target-0",
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e5-9",
+      "source": "5",
+      "target": "9",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    }
+  ],
+  "nodeCounter": 10,
+  "solverParams": {
+    "dt": "dt",
+    "dt_min": "1e-16",
+    "dt_max": "",
+    "Solver": "SSPRK22",
+    "tolerance_fpi": "1e-10",
+    "iterations_max": "200",
+    "log": "true",
+    "simulation_duration": "140",
+    "extra_params": "{}"
+  },
+  "globalVariables": [],
+  "events": [],
+  "pythonCode": "V = 5.20e-11  # m3  same\nA = 2.16e-6  # m2  same\nl = 3.3e-5  # m same\nR = 8.314  # same\navogadro = 6.022e23  # mol-1  same\ntemperature = 2373  # K  same\ninitial_pressure = 1e6  # Pa  same\nsolubility = 7.244e22 / temperature  # H/m3/Pa  # same\ndiffusivity = 2.6237e-11  # m2/s  almost same\n\ndt = 0.05"
+}
