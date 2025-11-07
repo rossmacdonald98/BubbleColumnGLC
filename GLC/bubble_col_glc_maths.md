@@ -573,7 +573,7 @@ $$\frac{4}{3} \cdot \pi \cdot r_b^3$$
 Bubble area $a_b$:
 $$a_b = 4 \cdot \pi \cdot r_b^2$$
 
-Number of bubbles per unit volume, $n_b$:
+Number of bubbles per unit volume of two-phase mixture, $n_b$:
 $$n_b=\frac{\epsilon_{g}}{v_b}$$
 
 Interfacial area per unit volume $a$:
@@ -581,7 +581,7 @@ $$a = n_b \cdot a_b = \frac{\epsilon_{g}}{\frac{4}{3} \cdot \pi \cdot r_b^3} \cd
 
 $$a =  \frac{6\epsilon_{g}}{d_b} \quad [{m^{-1}}] \tag{10.7.1}$$
 
-### 10.8. Volumetric Mass Transfer Coefficient ($a*h_l$)
+### 10.8. Volumetric Mass Transfer Coefficient ($a \cdot h_l$)
 
 An empirical correlation for the volumetric mass transfer coefficient used in the reference paper:
 
