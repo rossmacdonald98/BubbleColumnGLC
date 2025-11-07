@@ -476,6 +476,27 @@
       },
       "selected": false,
       "dragging": false
+    },
+    {
+      "id": "30",
+      "type": "scope",
+      "position": {
+        "x": 243.65685284422216,
+        "y": -440.1018519544402
+      },
+      "data": {
+        "label": "Fusion Rate",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": "",
+        "nodeColor": "#DDE6ED"
+      },
+      "measured": {
+        "width": 124,
+        "height": 144
+      },
+      "selected": false,
+      "dragging": false
     }
   ],
   "edges": [
@@ -1203,9 +1224,28 @@
         "height": 20,
         "color": "#ECDFCC"
       }
+    },
+    {
+      "id": "e1-30",
+      "source": "1",
+      "target": "30",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
     }
   ],
-  "nodeCounter": 30,
+  "nodeCounter": 31,
   "solverParams": {
     "dt": "0.02",
     "dt_min": "1e-6",
