@@ -565,7 +565,21 @@ $$
 
 ### 10.7. Specific Interfacial Area ($a$)
 
-????????????????????
+In this model we assume the bubbles are spherical, have a mean diameter of $d_b$, and are evenly distributed across the column.  Knowing the gas phase fraction $\epsilon_{g}$, we can then determine the specific interfacial area $a$:
+
+Bubble volume $v_b$: 
+$$\frac{4}{3} \cdot \pi \cdot r_b^3$$
+
+Bubble area $a_b$:
+$$a_b = 4 \cdot \pi \cdot r_b^2$$
+
+Number of bubbles per unit volume, $n_b$:
+$$n_b=\frac{\epsilon_{g}}{v_b}$$
+
+Interfacial area per unit volume $a$:
+$$a = n_b \cdot a_b = \frac{\epsilon_{g}}{\frac{4}{3} \cdot \pi \cdot r_b^3} \cdot (4 \cdot \pi \cdot r_b^2) = \frac{\epsilon_{g}}{\frac{1}{3} \cdot \frac{d_b}{2}}$$
+
+$$a =  \frac{6\epsilon_{g}}{d_b} \quad [{m^{-1}}] \tag{10.7.1}$$
 
 ### 10.8. Volumetric Mass Transfer Coefficient ($a*h_l$)
 
@@ -588,11 +602,35 @@ $$
 
 ### 11. Physical Properties Correlations
 
------ TO DO -----
+The Malara paper provides several correlations for the physical properties of LiPb, which are implemented in this model. 
+
+-   **LiPb Density :** $\rho_{l} = 10.45 \cdot 10^{3} \cdot (1-1.64 \cdot 10^{-4} \cdot T) \quad [{kg/m^3}] $
+-   **LiPb Dynamic Viscosity :** $ \mu_{l} = 1.87 \cdot 10^{-4} \cdot e^{\frac{11640}{RT}} \quad [{Pa \cdot s}] $
+-   **LiPb Tritium Diffusivity :** $D_{T,l} = 2.7 \cdot 10^{-7} \cdot e^{\frac{-27000}{RT}} \quad [{m^2/s}] $
+-   **Solubility of Tritium in LiPb, Sieverts constant :** $K_{l, atfrac} = 2.32 \cdot 10^{-8} \cdot e^{\frac{-1350}{RT}} \quad [at.frac \cdot Pa^{0.5}]$
+
+To get the Sieverts constant in SI units:
+-   **Solubility of Tritium in LiPb, Sieverts constant :** $K_{l} = K_{l, atfrac} \cdot \frac{\rho_{l}}{M \cdot N_{Av}} \quad [mol \cdot m^{3} \cdot Pa^{0.5}]$
+
+Where $M$ is the molecular weight of LiPb $(M=2.875 \cdot 10^{-25}) \quad [{kg/mol}]$ and $N_{Av}$ is the Avogadro constant.
+
+To obtain the kinematic viscosity $\nu_{l}$ we divide the dynamic viscosity by the density:
+-   **LiPb Kinematic Viscosity :** $\nu_{l} = \frac{\mu_{l}}{\rho_{l}} \quad [{m^2/s}] $
+
+The Malara paper does not provide a correlation for surface tension of the LiPb - Helium interface, however this property is needed for computing the Bond number. We use the correlation from [C] in this model:
+
+-   **LiPb - Helium Surface Tension :** $\sigma_{l} = 0.52 - 0.11 \cdot 10^{-3} \cdot T \quad [{N/m}]$
+
+
+ 
+
+
 
 ### References
 [A] - TRITIUM EXTRACTION FROM LIQUID Pb-l6li: A CRJTICAL REVIEW OF CANDIDATE TECHNOLOGIES
 FOR ITER AND DEMO APPLICATIONS
 
 [B] - Experimental design of tritium extraction loop from lead lithium eutectic
+
+[C] - Lead–lithium eutectic material database for nuclear fusion technology
 
