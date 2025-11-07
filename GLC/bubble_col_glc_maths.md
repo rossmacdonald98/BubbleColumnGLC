@@ -216,7 +216,7 @@ $$
 P(z) \cdot u_{g}(z) = P_{0} \cdot u_{g0}   \quad \rightarrow \quad    u_{g}(z) = \frac{P_{0} \cdot u_{g0}}{P(z)} \quad [m \cdot s^{-1}] \tag{5.3}
 $$
 
-Substituting (6.1) in (6.3) gives:
+Substituting (5.1) in (5.3) gives:
 
 $$
 u_{g}(z) = u_{g0}\frac{P_{0}}{P_{0} - \rho_{l}g(1-\epsilon_{g})z} \quad [m \cdot s^{-1}] \tag{5.4}
@@ -238,7 +238,7 @@ $$
 The flux $J_{T}$ is:
 
 $$
-J_{T}(z) = h_{l}(c_{T} - K_{s}(Py_{T_{2}})^{0.5}) \quad [mol \cdot m^{-2} \cdot s^{-1}] \tag{6.2}
+J_{T} = h_{l}(c_{T} - K_{s}(Py_{T_{2}})^{0.5}) \quad [mol \cdot m^{-2} \cdot s^{-1}] \tag{6.2}
 $$
 
 This is equation (8) in the paper.
@@ -323,7 +323,7 @@ Nondimensionalization of the equations makes the model easier to solve. The foll
 
 To solve the model, the original partial differential equations are transformed into a system of dimensionless ordinary differential equations (ODEs) using the variables and parameters defined in Section 8. This process simplifies the equations and groups physical parameters into meaningful dimensionless numbers.
 
-### 8.1. Liquid Phase ODE
+### 8.1. Liquid Phase Dimensionless ODE
 
 We start with the liquid phase mass balance (Equation 1.1):
 $$
@@ -356,7 +356,7 @@ $$
 $$
 This is equation (10) in the paper.
 
-### 8.2. Gas Phase ODE
+### 8.2. Gas Phase Dimensionless ODE
 
 The derivation for the gas phase is more involved. We start with the gas phase mass balance (Equation 2.1):
 $$
