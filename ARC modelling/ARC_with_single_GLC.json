@@ -723,48 +723,6 @@
       },
       "selected": false,
       "dragging": false
-    },
-    {
-      "id": "45",
-      "type": "scope",
-      "position": {
-        "x": 1799.3441474550518,
-        "y": 314.6894618750864
-      },
-      "data": {
-        "label": "Extraction efficiency",
-        "nodeColor": "#d973b8",
-        "labels": "",
-        "sampling_rate": "",
-        "t_wait": ""
-      },
-      "measured": {
-        "width": 123,
-        "height": 143
-      },
-      "selected": false,
-      "dragging": false
-    },
-    {
-      "id": "46",
-      "type": "scope",
-      "position": {
-        "x": 1734.3441474550518,
-        "y": 68.68946187508641
-      },
-      "data": {
-        "label": "c_T_in",
-        "nodeColor": "#d973b8",
-        "labels": "",
-        "sampling_rate": "",
-        "t_wait": ""
-      },
-      "measured": {
-        "width": 123,
-        "height": 143
-      },
-      "selected": false,
-      "dragging": false
     }
   ],
   "edges": [
@@ -1702,25 +1660,6 @@
       }
     },
     {
-      "id": "e31-45-from_eff",
-      "source": "31",
-      "target": "45",
-      "sourceHandle": "eff",
-      "targetHandle": null,
-      "type": "smoothstep",
-      "data": {},
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#ECDFCC"
-      },
-      "markerEnd": {
-        "type": "arrowclosed",
-        "width": 20,
-        "height": 20,
-        "color": "#ECDFCC"
-      }
-    },
-    {
       "id": "e25-15-from_inv",
       "source": "25",
       "target": "15",
@@ -1764,44 +1703,6 @@
       "target": "31",
       "sourceHandle": null,
       "targetHandle": "flow_g",
-      "type": "smoothstep",
-      "data": {},
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#ECDFCC"
-      },
-      "markerEnd": {
-        "type": "arrowclosed",
-        "width": 20,
-        "height": 20,
-        "color": "#ECDFCC"
-      }
-    },
-    {
-      "id": "e38-46",
-      "source": "38",
-      "target": "46",
-      "sourceHandle": null,
-      "targetHandle": null,
-      "type": "smoothstep",
-      "data": {},
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#ECDFCC"
-      },
-      "markerEnd": {
-        "type": "arrowclosed",
-        "width": 20,
-        "height": 20,
-        "color": "#ECDFCC"
-      }
-    },
-    {
-      "id": "e31-46-from_c_T_out",
-      "source": "31",
-      "target": "46",
-      "sourceHandle": "c_T_out",
-      "targetHandle": null,
       "type": "smoothstep",
       "data": {},
       "style": {
