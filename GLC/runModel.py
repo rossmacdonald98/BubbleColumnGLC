@@ -12,7 +12,7 @@ def main():
     # Operating Parameters
     # ------------------
     # Input parameters for liquid phase
-    c_T_inlet = 1.96e-2  # mol/m^3 (c_T(L+)), Inlet tritium concentration in liquid
+    c_T_in = 1.96e-2  # mol/m^3 (c_T(L+)), Inlet tritium concentration in liquid
 
     # Input parameters for gas phase
     y_T2_in = 0  # Inlet tritium molar fraction in gas (0 = pure purge gas)
@@ -22,11 +22,11 @@ def main():
         y_T2_in = 1e-20
 
     # Physical parameters
-    P_0 = 5e5  # Pa, Total pressure at gas inlet / liquid outlet
+    P_in = 5e5  # Pa, Total pressure at gas inlet / liquid outlet
     L = 3  # m, Height of the bubble column
     D = 0.5  # m, Column diameter
-    Flow_l = 560  # kg/s, Liquid mass flow rate
-    Flow_g = 0.19  # mol/s, Gas molar flow rate
+    flow_l = 560  # kg/s, Liquid mass flow rate
+    flow_g = 0.19  # mol/s, Gas molar flow rate
     T = 623  # K, Temperature
 
     # Solver parameters
@@ -35,14 +35,14 @@ def main():
 
     # Package parameters for solver
     params = {
-        "c_T_inlet": c_T_inlet,
+        "c_T_in": c_T_in,
         "y_T2_in": y_T2_in,
-        "P_0": P_0,
+        "P_in": P_in,
         "BCs": BCs,
         "L": L,
         "D": D,
-        "Flow_l": Flow_l,
-        "Flow_g": Flow_g,
+        "flow_l": flow_l,
+        "flow_g": flow_g,
         "T": T,
         "elements": elements,
     }
