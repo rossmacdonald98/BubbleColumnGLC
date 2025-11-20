@@ -10,5 +10,5 @@ dependencies:
   - festim
   - pip
   - pip:
-    - git+https://github.com/festim-dev/PathView@glc
+    - git+https://github.com/festim-dev/PathView@avg_velocity
     - morethemes
