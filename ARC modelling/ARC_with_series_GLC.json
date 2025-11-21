@@ -1,7 +1,7 @@
 {
   "version": {
     "pathsim_version": "0.13.0",
-    "pathview_version": "0.2.dev93+gc524c1c59"
+    "pathview_version": "0.2.dev94+gf8fbd9d38"
   },
   "nodes": [
     {
@@ -465,7 +465,7 @@
         "y": 355.06539718448295
       },
       "data": {
-        "label": "GLC 1",
+        "label": "BCR 1",
         "nodeColor": "#d973b8",
         "BCs": "BCs",
         "D": "D",
@@ -490,13 +490,13 @@
         "y": 137.44966945029554
       },
       "data": {
-        "label": "1000 / [T mol mass]",
+        "label": "1000 / T mol mass [mol / kg]",
         "nodeColor": "#d973b8",
         "value": "1000 / T_mol_mass"
       },
       "measured": {
         "width": 203,
-        "height": 51
+        "height": 75
       },
       "selected": false,
       "dragging": false
@@ -523,7 +523,7 @@
       "id": "34",
       "type": "constant",
       "position": {
-        "x": 623.1899110095153,
+        "x": 563.1899110095153,
         "y": 203.5400820933837
       },
       "data": {
@@ -583,7 +583,7 @@
         "y": 319.56896333133744
       },
       "data": {
-        "label": "^-1",
+        "label": "Q_l^-1 [s / m3]",
         "nodeColor": "#d973b8",
         "exponent": "-1"
       },
@@ -602,7 +602,7 @@
         "y": 259.45480200187535
       },
       "data": {
-        "label": "C_t_in [mol/m3]",
+        "label": "c_T_in [mol/m3]",
         "nodeColor": "#d973b8"
       },
       "measured": {
@@ -620,7 +620,7 @@
         "y": 472.92852515588885
       },
       "data": {
-        "label": "total_flow_g [mol/s]",
+        "label": "total_flow_g [mol / s]",
         "nodeColor": "#d973b8",
         "value": "total_flow_g"
       },
@@ -658,7 +658,7 @@
         "y": 576.6894618750864
       },
       "data": {
-        "label": "T_mol_mass [kg]",
+        "label": "T_mol_mass [kg / mol]",
         "nodeColor": "#d973b8",
         "value": "T_mol_mass / 1000"
       },
@@ -677,7 +677,7 @@
         "y": 652.6894618750864
       },
       "data": {
-        "label": "GLC_T_gas_out [kg/s]",
+        "label": "T_gas_out [kg/s]",
         "nodeColor": "#d973b8"
       },
       "measured": {
@@ -695,7 +695,7 @@
         "y": 244.01657964347203
       },
       "data": {
-        "label": "T_mol_mass [kg]",
+        "label": "T_mol_mass [kg / mol]",
         "nodeColor": "#d973b8",
         "value": "T_mol_mass / 1000"
       },
@@ -714,7 +714,7 @@
         "y": 302.6894618750864
       },
       "data": {
-        "label": "GLC_T_liquid_out [kg/s]",
+        "label": "T_liquid_out [kg/s]",
         "nodeColor": "#d973b8"
       },
       "measured": {
@@ -728,11 +728,11 @@
       "id": "45",
       "type": "scope",
       "position": {
-        "x": 3037.344147455052,
-        "y": 372.6894618750864
+        "x": 2852.594147455052,
+        "y": 394.6894618750864
       },
       "data": {
-        "label": "Extraction efficiency",
+        "label": "Efficiency",
         "nodeColor": "#d973b8",
         "labels": "",
         "sampling_rate": "",
@@ -742,7 +742,7 @@
         "width": 123,
         "height": 143
       },
-      "selected": false,
+      "selected": true,
       "dragging": false
     },
     {
@@ -753,7 +753,7 @@
         "y": 68.68946187508641
       },
       "data": {
-        "label": "c_T",
+        "label": "Liquid concentration",
         "nodeColor": "#d973b8",
         "labels": "",
         "sampling_rate": "",
@@ -774,7 +774,7 @@
         "y": 355.06539718448295
       },
       "data": {
-        "label": "GLC 2",
+        "label": "BCR 2",
         "nodeColor": "#d973b8",
         "BCs": "BCs",
         "D": "D",
@@ -799,7 +799,7 @@
         "y": 355.06539718448295
       },
       "data": {
-        "label": "GLC 3",
+        "label": "BCR 3",
         "nodeColor": "#d973b8",
         "BCs": "BCs",
         "D": "D",
@@ -824,7 +824,7 @@
         "y": 512.4619428955831
       },
       "data": {
-        "label": "y_T2",
+        "label": "Gas concentration",
         "nodeColor": "#d973b8",
         "labels": "",
         "sampling_rate": "",
@@ -845,7 +845,7 @@
         "y": 685.7556558100441
       },
       "data": {
-        "label": "^-1",
+        "label": "c_T_in ^-1 [m3 / mol]",
         "nodeColor": "#d973b8",
         "exponent": "-1"
       },
@@ -901,7 +901,7 @@
         "y": 651.4514310250148
       },
       "data": {
-        "label": "addsub 55",
+        "label": "Total efficiency",
         "nodeColor": "#d973b8",
         "inputCount": "2",
         "outputCount": 1,
@@ -2270,7 +2270,8 @@
         "width": 20,
         "height": 20,
         "color": "#ECDFCC"
-      }
+      },
+      "selected": false
     },
     {
       "id": "e48-52-from_c_T_out",
@@ -2289,7 +2290,8 @@
         "width": 20,
         "height": 20,
         "color": "#ECDFCC"
-      }
+      },
+      "selected": false
     },
     {
       "id": "e51-52",
@@ -2391,12 +2393,12 @@
   "solverParams": {
     "dt": "1",
     "dt_min": "1e-6",
-    "dt_max": "None",
+    "dt_max": "50",
     "Solver": "RKF21",
     "tolerance_fpi": "1e-6",
     "iterations_max": "100",
     "log": "true",
-    "simulation_duration": "1*24*3600",
+    "simulation_duration": "0.1*24*3600",
     "extra_params": "{\"tolerance_lte_rel\": 1e-4, \"tolerance_lte_abs\": 1e-5}"
   },
   "globalVariables": [

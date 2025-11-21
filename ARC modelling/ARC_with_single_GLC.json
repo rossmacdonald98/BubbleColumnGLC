@@ -1,7 +1,7 @@
 {
   "version": {
     "pathsim_version": "0.13.0",
-    "pathview_version": "0.2.dev93+gc524c1c59"
+    "pathview_version": "0.2.dev94+gf8fbd9d38"
   },
   "nodes": [
     {
@@ -465,7 +465,7 @@
         "y": 355.06539718448295
       },
       "data": {
-        "label": "GLC 1",
+        "label": "BCR 1",
         "nodeColor": "#d973b8",
         "BCs": "BCs",
         "D": "D",
@@ -486,17 +486,17 @@
       "id": "32",
       "type": "constant",
       "position": {
-        "x": 773.4794500872323,
-        "y": 137.44966945029554
+        "x": 779.4794500872323,
+        "y": 125.44966945029554
       },
       "data": {
-        "label": "1000 / [T mol mass]",
+        "label": "1000 / T mol mass [mol / kg]",
         "nodeColor": "#d973b8",
         "value": "1000 / T_mol_mass"
       },
       "measured": {
         "width": 203,
-        "height": 51
+        "height": 75
       },
       "selected": false,
       "dragging": false
@@ -583,7 +583,7 @@
         "y": 319.56896333133744
       },
       "data": {
-        "label": "^-1",
+        "label": "Q_l^-1 [s / m3]",
         "nodeColor": "#d973b8",
         "exponent": "-1"
       },
@@ -602,7 +602,7 @@
         "y": 259.45480200187535
       },
       "data": {
-        "label": "C_t_in [mol/m3]",
+        "label": "c_T_in [mol/m3]",
         "nodeColor": "#d973b8"
       },
       "measured": {
@@ -635,8 +635,8 @@
       "id": "40",
       "type": "constant",
       "position": {
-        "x": 891.6704254714227,
-        "y": 405.86706458661763
+        "x": 1199.6704254714227,
+        "y": 443.86706458661763
       },
       "data": {
         "label": "y_T2_in",
@@ -658,7 +658,7 @@
         "y": 576.6894618750864
       },
       "data": {
-        "label": "T_mol_mass [kg]",
+        "label": "T_mol_mass [kg / mol]",
         "nodeColor": "#d973b8",
         "value": "T_mol_mass / 1000"
       },
@@ -695,7 +695,7 @@
         "y": 468.6894618750864
       },
       "data": {
-        "label": "T_mol_mass [kg]",
+        "label": "T_mol_mass [kg / mol]",
         "nodeColor": "#d973b8",
         "value": "T_mol_mass / 1000"
       },
@@ -720,6 +720,69 @@
       "measured": {
         "width": 63,
         "height": 63
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "50",
+      "type": "scope",
+      "position": {
+        "x": 1865.344147455052,
+        "y": 314.8644687415415
+      },
+      "data": {
+        "label": "Efficiency",
+        "nodeColor": "#c679b4",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": ""
+      },
+      "measured": {
+        "width": 123,
+        "height": 143
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "51",
+      "type": "scope",
+      "position": {
+        "x": 1789.6866646095405,
+        "y": 610.8644687415415
+      },
+      "data": {
+        "label": "Gas concentration",
+        "nodeColor": "#c679b4",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": ""
+      },
+      "measured": {
+        "width": 123,
+        "height": 143
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "52",
+      "type": "scope",
+      "position": {
+        "x": 1726.6866646095405,
+        "y": 234.8644687415415
+      },
+      "data": {
+        "label": "Liquid concentration",
+        "nodeColor": "#c679b4",
+        "labels": "",
+        "sampling_rate": "",
+        "t_wait": ""
+      },
+      "measured": {
+        "width": 123,
+        "height": 143
       },
       "selected": false,
       "dragging": false
@@ -1715,18 +1778,113 @@
         "height": 20,
         "color": "#ECDFCC"
       }
+    },
+    {
+      "id": "e31-50-from_eff",
+      "source": "31",
+      "target": "50",
+      "sourceHandle": "eff",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e31-51-from_y_T2_out",
+      "source": "31",
+      "target": "51",
+      "sourceHandle": "y_T2_out",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e40-51",
+      "source": "40",
+      "target": "51",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e31-52-from_c_T_out",
+      "source": "31",
+      "target": "52",
+      "sourceHandle": "c_T_out",
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
+    },
+    {
+      "id": "e38-52",
+      "source": "38",
+      "target": "52",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "data": {},
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ECDFCC"
+      },
+      "markerEnd": {
+        "type": "arrowclosed",
+        "width": 20,
+        "height": 20,
+        "color": "#ECDFCC"
+      }
     }
   ],
-  "nodeCounter": 47,
+  "nodeCounter": 53,
   "solverParams": {
-    "dt": "1",
+    "dt": "0.1",
     "dt_min": "1e-6",
     "dt_max": "None",
     "Solver": "RKF21",
     "tolerance_fpi": "1e-6",
     "iterations_max": "100",
     "log": "true",
-    "simulation_duration": "1*24*3600",
+    "simulation_duration": "0.01*24*3600",
     "extra_params": "{\"tolerance_lte_rel\": 1e-4, \"tolerance_lte_abs\": 1e-5}"
   },
   "globalVariables": [
