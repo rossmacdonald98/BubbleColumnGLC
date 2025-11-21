@@ -7,8 +7,12 @@ dependencies:
   - matplotlib
   - ipykernel
   - scipy
-  - festim
+  # - festim
+  - python-gmsh
+  - scifem
+  - fenics-dolfinx
   - pip
   - pip:
     - git+https://github.com/festim-dev/PathView@glc
+    - git+https://github.com/festim-dev/festim@fenicsx
     - morethemes
